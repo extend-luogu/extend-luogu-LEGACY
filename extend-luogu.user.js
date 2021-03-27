@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           extend-luogu
 // @namespace      http://tampermonkey.net/
-// @version        4.6.2
+// @version        4.6.3
 // @description    Make Luogu more powerful.
 // @author         optimize_2 ForkKILLET
 // @match          https://*.luogu.com.cn/*
@@ -684,7 +684,7 @@ mod.reg("rand-problem", "随机跳题ex", "@/", () => {
     $rand_problem.append(`
 <h2>按题单随机跳题</h2>
 <div class="am-input-group am-input-group-primary am-input-group-sm">
-    <input type="text" class="am-form-field" name="rand-problem-2" />
+    <input type="text" class="am-form-field" name="rand-problem-2" placeholder="请输入题单ID"/>
 </div> <br/>
 <button class="am-btn am-btn-sm am-btn-primary" id="rand-problem-2">跳转</button>
     `)
