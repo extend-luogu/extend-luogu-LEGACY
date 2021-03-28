@@ -5,10 +5,12 @@ Make [Luogu](https://www.luogu.com.cn/) more powerful.
 ## Installation
 
 [Chinese Guide](https://www.luogu.com.cn/paste/fnln7ze9)
-
+<!--
 Copy `extend-luogu.user.js` into Tampermonkey's `Create a new script` page, and save it.
 
 _Make sure to copy the code **completely**._
+-->
+Click [here](https://github.com/optimize-2/extend-luogu/raw/main/extend-luogu.user.js) for direct installiation if you have installed tampermonkey which can be accessed [from the official website](https://www.tampermonkey.net/).
 
 You will be automatically notified when there's a update.
 
@@ -22,4 +24,4 @@ Welcome!
 ## Discussion
 
 - QQ Group: `817265691`
-
+- Discord Discussion: [here](https://discord.gg/mHsx9crXjv)
