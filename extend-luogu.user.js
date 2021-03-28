@@ -964,15 +964,19 @@ mod.reg("copy-code-block", "一键复制代码块", "@/*", () => {
     if ($cb.length) log(`Scanning code block:`, $cb.length)
 
     $cb.each((i, e, $e = $(e)) => {
-        $(`<div class="exlg-copy">点我复制</div>`)
-            .on("click", () => {
-                const $textarea = $("<textarea></textarea>")
-                      .appendTo($("body"))
-                      .text($e.text().slice(0, -4))
-                      .select()
-                document.execCommand("copy")
-                $textarea.remove()
-            })
+        const btn = $(`<div class="exlg-copy">点我复制</div>`)
+        btn.on("click", () => {
+            const $textarea = $("<textarea></textarea>")
+                .appendTo($("body"))
+                .text($e.text().slice(0, -4))
+                .select()
+            btn.text("已复制")
+            setTimeout(function () {
+                btn.text("点我复制")
+            }, 1000)
+            document.execCommand("copy")
+            $textarea.remove()
+        })
             .appendTo($cb[i])
     })
 }, `
