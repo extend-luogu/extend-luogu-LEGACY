@@ -1,12 +1,13 @@
 // ==UserScript==
 // @name           extend-luogu
 // @namespace      http://tampermonkey.net/
-// @version        4.4.2
+// @version        4.5.1
 // @description    Make Luogu more powerful.
 // @author         optimize_2 ForkKILLET
 // @match          https://*.luogu.com.cn/*
 // @match          https://*.luogu.org/*
 // @match          https://service-ig5px5gh-1305163805.sh.apigw.tencentcs.com/release/APIGWHtmlDemo-1615602121
+// @match          https://service-psscsax9-1305163805.sh.apigw.tencentcs.com/release/exlg-version
 // @require        https://cdn.luogu.com.cn/js/jquery-2.1.1.min.js
 // @require        https://cdnjs.cloudflare.com/ajax/libs/js-xss/0.3.3/xss.min.js
 // @require        https://cdnjs.cloudflare.com/ajax/libs/marked/2.0.1/marked.min.js
@@ -150,7 +151,8 @@ const mod = {
             if (m.on && m.path.some((p, _, __, pr = p.replace(/^[a-z]*?@.*?(?=\/)/, "")) => (
                 p.startsWith("@/") && location.host === "www.luogu.com.cn" ||
                 p.startsWith("@cdn/") && location.host === "cdn.luogu.com.cn" ||
-                p.startsWith("@tcs/") && location.host === "service-ig5px5gh-1305163805.sh.apigw.tencentcs.com"
+                p.startsWith("@tcs1/") && location.host === "service-ig5px5gh-1305163805.sh.apigw.tencentcs.com" ||
+                p.startsWith("@tcs2/") && location.host === "service-psscsax9-1305163805.sh.apigw.tencentcs.com"
             ) && (
                 p.endsWith("*") && pn.startsWith(pr.slice(0, -1)) ||
                 pn === pr
@@ -166,7 +168,11 @@ mod.reg_main("springboard", "@/robots.txt", () => {
     const q = new URLSearchParams(location.search)
     if (q.has("benben")) {
         document.write(`<iframe src="https://service-ig5px5gh-1305163805.sh.apigw.tencentcs.com/release/APIGWHtmlDemo-1615602121"></iframe>`)
-        uindow.addEventListener("message", e => uindow.parent.postMessage(e.data, "*"))
+        uindow.addEventListener("message", e => {e.data.unshift("benben"); uindow.parent.postMessage(e.data, "*")})
+    }
+    else if (q.has("update")) {
+        document.write(`<iframe src="https://service-psscsax9-1305163805.sh.apigw.tencentcs.com/release/exlg-version"></iframe>`)
+        uindow.addEventListener("message", e => {e.data.unshift("update"); uindow.parent.postMessage(e.data, "*")})
     }
     else if (q.has("url")) {
         const url = q.get("url")
@@ -185,8 +191,13 @@ iframe::-webkit-scrollbar {
 }
 `)
 
-mod.reg_main("benben-data", "@tcs/release/APIGWHtmlDemo-1615602121", () => {
+mod.reg_main("benben-data", "@tcs1/release/APIGWHtmlDemo-1615602121", () => {
     const data = JSON.parse(document.body.innerText)
+    uindow.parent.postMessage(data, "*")
+})
+
+mod.reg_main("version-data", "@tcs2/release/exlg-version", () => {
+    const data = [document.body.innerText]
     uindow.parent.postMessage(data, "*")
 })
 
@@ -383,8 +394,36 @@ mod.reg("emoticon", [ "@/discuss/lists", "@/discuss/show/*" ], () => {
 `)
 
 mod.reg_chore("update", "1D", "@/*", () => {
-    $.get("https://www.luogu.com.cn/team/33255?_contentOnly=true" /* exlg team */, res => {
-        error.check_fe(res)
+    let loaded = false
+    if (loaded) $("#exlg-benben").attr("src", $("#exlg-benben").attr("src"))
+    else {
+        const $sb = $(`<iframe id="exlg-update" src="https://www.luogu.com.cn/robots.txt?update"></iframe>`)
+              .appendTo($("body")).hide()
+        log("Building springboard:", $sb[0])
+        loaded = true
+    }
+    uindow.addEventListener("message", e => {
+        log("Listening message:", e.data)
+
+        if (e.data[0] !== "update") return
+        e.data.shift()
+        const
+            latest = e.data[0],
+            version = GM_info.script.version,
+            op = version_cmp(version, latest)
+
+        const l = `Comparing version: ${version} ${op} ${latest}`
+        log(l)
+
+        if (op === "<<") $("#exlg-dash > .exlg-warn").show()
+        $("#exlg-dash-verison").html(l.split(": ")[1]
+            .replace(">>", `<span style="color: #5eb95e;">&gt;&gt;</span>`)
+            .replace("==", `<span style="color: #5eb95e;">==</span>`)
+            .replace("<<", `<span style="color: #e74c3c;">&lt;&lt;</span>`)
+        )
+    })
+    /*
+    lg_content("/team/33255", res => {
         const
             latest = res.currentData.team.setting.description.match(/VER {(.*?)}/)?.[1],
             version = GM_info.script.version,
@@ -400,6 +439,7 @@ mod.reg_chore("update", "1D", "@/*", () => {
             .replace("<<", `<span style="color: #e74c3c;">&lt;&lt;</span>`)
         )
     })
+    */
 })
 
 mod.reg_user_tab("user-intro-ins", "main", null, () => {
@@ -554,6 +594,8 @@ mod.reg("benben", "@/", () => {
     uindow.addEventListener("message", e => {
         log("Listening message:", e.data)
 
+        if (e.data[0] !== "benben") return
+        e.data.shift()
         e.data.forEach(m =>
             $(`
 <li class="am-comment am-comment-primary feed-li">
