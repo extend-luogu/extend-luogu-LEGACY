@@ -993,14 +993,15 @@ mod.reg("copy-code-block", "一键复制代码块", "@/*", () => {
         btn.on("click", () => {
             const $textarea = $("<textarea></textarea>")
                 .appendTo($("body"))
-                .text($e.text().slice(0, -4))
+                .text($e.text().slice(6))
                 .select()
-            btn.text("已复制")
+            btn.text("复制成功")
             setTimeout(() => btn.text("复制"), 1000)
             document.execCommand("copy")
             $textarea.remove()
         })
             .prependTo($cb[i])
+        $(`<span style="font-size:15px;font-weight:bold">源代码</span>`).prependTo($cb[i])
     })
 }, `
 .exlg-copy {
@@ -1024,13 +1025,13 @@ mod.reg_board("search-user", "查找用户名", $board => {
     $board.html(`
 <h3>查找用户</h3>
 <div class="am-input-group am-input-group-primary am-input-group-sm">
-    <input type="text" class="am-form-field" placeholder="用户名" name="username">
+    <input type="text" class="am-form-field" placeholder="用户名" name="username" id="search-user-input">
 </div>
 <p>
     <button class="am-btn am-btn-danger am-btn-sm" id="search-user">跳转</button>
 </p>
 `)
-    const $search_user = $("#search-user").on("click", () => {
+    var goto_user = () => {
         $search_user.prop("disabled", true)
         $.get("/api/user/search?keyword=" + $("[name=username]").val(), res => {
             if (! res.users[0]) {
@@ -1040,7 +1041,9 @@ mod.reg_board("search-user", "查找用户名", $board => {
             else
                 location.href = "/user/" + res.users[0].uid
         })
-    })
+    }
+    const $search_user = $("#search-user").on("click", goto_user)
+    $("#search-user-input").keydown((e)=>{if(e.keyCode==13){goto_user()}})
 })
 
 $(() => mod.execute())
