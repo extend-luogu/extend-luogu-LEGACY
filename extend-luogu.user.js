@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           extend-luogu
 // @namespace      http://tampermonkey.net/
-// @version        5.2.1
+// @version        5.3.1.1
 // @description    Make Luogu more powerful.
 // @author         optimize_2 ForkKILLET minstdfx haraki
 // @match          https://*.luogu.com.cn/*
@@ -135,7 +135,7 @@ const mod = {
             if (! $board.length) $board = $(`
 <div class="lg-article" id="exlg-board"><h2>exlg</h2></div> <br />
 `).prependTo(".lg-right.am-u-md-4")
-            func($(`<div></div>`).appendTo($board))
+            func($(`<div></div><br>`).appendTo($board))
         }, styl
     ),
     find: name => mod._.find(m => m.name === name),
@@ -226,7 +226,9 @@ mod.reg("dash", "控制面板", "@/*", () => {
     <p>
         <b>版本</b> <a id="exlg-dash-version-update">检查更新</a> <br />
         <a href="https://github.com/optimize-2/extend-luogu">GitHub</a> |
-        <a href="https://github.com/optimize-2/extend-luogu/raw/main/extend-luogu.user.js">Raw</a> <br />
+        <a href="https://github.com/optimize-2/extend-luogu/raw/main/extend-luogu.user.js">Raw</a> |
+        <a href="https://hub.fastgit.org/optimize-2/extend-luogu/raw/main/extend-luogu.user.js">FastGit</a>
+        <br />
         <a href="https://cdn.jsdelivr.net/gh/optimize-2/extend-luogu@latest/extend-luogu.user.js">JsDelivr</a>
         <i class="exlg-icon exlg-info" name="一键更新"></i>
         <br />
@@ -292,7 +294,7 @@ mod.reg("dash", "控制面板", "@/*", () => {
     display: none;
     overflow-y: scroll;
 
-    width: 200px;
+    width: 250px;
     height: 600px;
     padding: 5px;
 
@@ -359,6 +361,7 @@ mod.reg("dash", "控制面板", "@/*", () => {
 `)
 
 mod.reg("emoticon", "表情输入", [ "@/discuss/lists", "@/discuss/show/*" ], () => {
+    /*
     const emo = [
         [ "62224", [ "qq" ] ],
         [ "62225", [ "cy" ] ],
@@ -379,13 +382,41 @@ mod.reg("emoticon", "表情输入", [ "@/discuss/lists", "@/discuss/show/*" ], (
         [ "69020", [ "youl", "yl" ] ]
     ]
     const emo_url = id => `https://cdn.luogu.com.cn/upload/pic/${id}.png`
+    */
+    const emo = [
+        "qq",
+        "cy",
+        "kel",
+        "dk",
+        "kk",
+        "xyx",
+        "jk",
+        "ts",
+        "yun",
+        "yiw",
+        "se",
+        "px",
+        "wq",
+        "fad",
+        "xia",
+        "jy",
+        "qiao",
+        "youl",
+        "qiang",
+        "ruo",
+        "shq",
+        "mg",
+        "dx",
+        "tyt",
+    ]
+    const emo_url = name => `https://xn--9zr.tk/${name}`
     const $menu = $(".mp-editor-menu"),
         $txt = $(".CodeMirror-wrap textarea"),
         $nl = $("<br />").appendTo($menu),
         $grd = $(".mp-editor-ground").addClass("exlg-ext")
 
     emo.forEach(m => {
-        const url = emo_url(m[0])
+        const url = emo_url(m)
         $(`<li class="exlg-emo"><img src="${url}" /></li>`)
             .on("click", () => $txt
                 .trigger("focus")
@@ -651,36 +682,101 @@ mod.reg("benben", "全网犇犇", "@/", () => {
 })
 
 mod.reg_board("rand-problem-ex", "随机跳题ex", $board => {
-    $board.html(`
-<h3>按难度随机跳题</h3>
-<select class="am-form-field" name="difficulty" autocomplete="off" placeholder="选择难度">
-    <option value="0">暂无评定</option>
-    <option value="1">入门</option>
-    <option value="2">普及-</option>
-    <option value="3">普及/提高-</option>
-    <option value="4">普及+/提高</option>
-    <option selected value="5">提高+/省选-</option>
-    <option value="6">省选/NOI-</option>
-    <option value="7">NOI/NOI+/CTSC</option>
-</select>
-<select class="am-form-field" name="source" autocomplete="off" placeholder="选择来源">
-    <option selected value="P">洛谷题库</option>
-    <option value="CF">CodeForces</option>
-    <option value="SP">SPOJ</option>
-    <option value="AT">AtCoder</option>
-    <option value="UVA">UVa</option>
-</select>
-<button class="am-btn am-btn-sm am-btn-primary" id="rand-problem-1">跳转</button>
-
-<h3>按题单随机跳题</h3>
-<div class="am-input-group am-input-group-primary am-input-group-sm">
-    <input type="text" class="am-form-field" name="rand-problem-2" />
-</div>
-<button class="am-btn am-btn-sm am-btn-primary" id="rand-problem-2">跳转</button>
-`)
-
-    $("#rand-problem-1").on("click", () => {
-        const difficulty = $("[name=difficulty").val(), source = $("[name=source]").val()
+	$("[name='gotorandom']").text("随机")
+	const $start_rand = $(`<button class="am-btn am-btn-primary am-btn-sm" name="gotorandomex" id="gtrdex">随机ex</button>`)
+	$start_rand.appendTo($("[name='gotorandom']").parent())
+    $(`
+<div id="exlg-dash-0" class = "exlg-rand-settings">...</div>
+<span id="exlg-dash-0-window" class="exlg-window">
+	<p>
+		<ul id="exlg-rand-diffs"><h2>随机跳题ex</h2></ul>
+	</p>
+</span>
+`).appendTo($("[name='gotorandom']").parent())
+	const iLoveMinecraft = [0,1,2,3,4,5,6,7]
+	const iLoveTouhou = [0,1,2,3,4]
+	const fackYouCCF = ["P","CF","SP","AT","UVA"]
+	var difficulty_select = GM_getValue("mod-rand-difficulty",[0,0,0,0,0,0,0,0])
+	var source_select = GM_getValue("mod-rand-source",[0,0,0,0,0])
+	var difficulty_html = [
+		`<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-red">入门</div>`,
+		`<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-orange">普及-</div>`,
+		`<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-yellow">普及/提高-</div>`,
+		`<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-green">普及+/提高</div>`,
+		`<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-blue">提高+/省选-</div>`,
+		`<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-purple">省选/NOI-</div>`,
+		`<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-black">NOI/NOI+/CTSC</div>`,
+		`<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-grey">暂无评定</div>`
+	]
+	var source_html = [
+		`<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-red">洛谷题库</div>`,
+		`<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-orange">Codeforces</div>`,
+		`<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-yellow">SPOJ</div>`,
+		`<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-green">ATcoder</div>`,
+		`<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-blue">UVA</div>`
+	]
+	const $diffs = $("#exlg-rand-diffs")
+	$(`<h3>设置题目难度</h3>`).appendTo($diffs)
+	iLoveMinecraft.forEach( i =>{
+		const $m = $(`
+<li>
+    <input type="checkbox" />
+    `+difficulty_html[i]+`<br/>
+</li>
+		`).appendTo($diffs)
+		$m.children("input")
+		.prop("checked", difficulty_select[i]==1)
+		.on("change", ()=>{
+			difficulty_select[i]=!difficulty_select[i]
+		})
+	})
+	$(`<h3>设置题目来源</h3>`).appendTo($diffs)
+	iLoveTouhou.forEach( i =>{
+		const $m = $(`
+<li>
+    <input type="checkbox" />
+    `+source_html[i]+`<br/>
+</li>
+		`).appendTo($diffs)
+		$m.children("input")
+		.prop("checked", source_select[i]==1)
+		.on("change", ()=>{
+			source_select[i]=!source_select[i]
+		})
+	})
+	$(`<br>`).appendTo($diffs)
+	const save_rdpb = $(`<button class="am-btn am-btn-primary am-btn-sm" name="saverandom">保存</button>`)
+	save_rdpb.on("click",_ => {
+		GM_setValue("mod-rand-difficulty",difficulty_select)
+		GM_setValue("mod-rand-source",source_select)
+		$("#exlg-dash-0-window").toggle()
+	})
+	save_rdpb.appendTo($diffs)
+	$("#exlg-dash-0").on("click", _ => $("#exlg-dash-0-window").toggle())
+	const HREF_NEXT = () => {
+		//console.log("IAKIOI")
+		var difs = []
+		iLoveMinecraft.forEach( i =>{
+			if (difficulty_select[i] != 0) {
+				if(i == 7) {
+					difs.push(0)
+				}
+				else difs.push(i+1)
+			}
+		})
+		if (difs.length == 0) {
+			difs = [0,1,2,3,4,5,6,7]
+		}
+		var srcs = []
+		iLoveTouhou.forEach( i =>{
+			if (source_select[i] != 0) srcs.push(i)
+		})
+		if (srcs.length == 0) {
+			srcs = [0]
+		}
+		const difficulty = difs[Math.floor(Math.random()*difs.length)];
+		//["P","CF","SP","AT","UVA"]
+        const source = fackYouCCF[srcs[Math.floor(Math.random()*srcs.length)]]
         lg_content(`/problem/list?difficulty=${difficulty}&type=${source}&page=1`,
             res => {
                 const
@@ -698,7 +794,10 @@ mod.reg_board("rand-problem-ex", "随机跳题ex", $board => {
                 )
             }
         )
-    })
+    }
+	$("#gtrdex").on("click", HREF_NEXT)
+
+
     $("#rand-problem-2").on("click", () => {
         const id = $("[name=rand-problem-2]").val()
         lg_content(`/training/${id}`,
@@ -711,7 +810,79 @@ mod.reg_board("rand-problem-ex", "随机跳题ex", $board => {
             }
         )
     })
-})
+},  `
+#exlg-rand-diffs {
+	list-style-type:none
+}
+.exlg-rand-settings {
+    position: relative;
+    display: inline-block;
+
+    padding: 1px 5px 1px;
+
+    background-color: cornflowerblue;
+    color: white;
+    border-radius: 6px;
+    font-size:2px;
+    float:right
+}
+.exlg-difficulties {
+    position: relative;
+    display: inline-block;
+
+    padding: 1px 5px 1px;
+
+    color: white;
+    border-radius: 6px;
+    font-size:1px;
+}
+.exlg-color-red {
+	background-color: rgb(254, 76, 97)
+}
+.exlg-color-orange {
+	background-color: rgb(243, 156, 17)
+}
+.exlg-color-yellow {
+	background-color: rgb(255, 193, 22)
+}
+.exlg-color-green {
+	background-color: rgb(82, 196, 26)
+}
+.exlg-color-blue {
+	background-color: rgb(52, 152, 219)
+}
+.exlg-color-purple {
+	background-color: rgb(157, 61, 207)
+}
+.exlg-color-black {
+	background-color: rgb(14, 29, 105)
+}
+.exlg-color-grey {
+	background-color: rgb(191, 191, 191)
+}
+.exlg-rand-settings:hover {
+    box-shadow: 0 0 7px dodgerblue;
+}
+.exlg-window {
+    position: absolute;
+    top: 35px;
+    left: 0px;
+    z-index: 65536;
+
+    display: none;
+    overflow-y: scroll;
+
+    width: 250px;
+    height: 300px;
+    padding: 5px;
+
+    background: white;
+    color: black;
+
+    border-radius: 7px;
+    box-shadow: rgb(187 227 255) 0px 0px 7px;
+}
+`)
 
 mod.reg("keyboard-and-cli", "键盘操作与命令行", "@/*", () => {
     const $cli = $(`<div id="exlg-cli"></div>`).appendTo($("body"))
@@ -989,6 +1160,8 @@ mod.reg("copy-code-block", "一键复制代码块", "@/*", () => {
     if ($cb.length) log(`Scanning code block:`, $cb.length)
 
     $cb.each((i, e, $e = $(e)) => {
+        $(`<body><text>
+</text></body>`).prependTo($cb[i])
         const btn = $(`<div class="exlg-copy">复制</div>`)
         btn.on("click", () => {
             const $textarea = $("<textarea></textarea>")
@@ -999,8 +1172,7 @@ mod.reg("copy-code-block", "一键复制代码块", "@/*", () => {
             setTimeout(() => btn.text("复制"), 1000)
             document.execCommand("copy")
             $textarea.remove()
-        })
-            .prependTo($cb[i])
+        }).prependTo($cb[i])
         $(`<span style="font-size:15px;font-weight:bold">源代码</span>`).prependTo($cb[i])
     })
 }, `
@@ -1025,13 +1197,13 @@ mod.reg_board("search-user", "查找用户名", $board => {
     $board.html(`
 <h3>查找用户</h3>
 <div class="am-input-group am-input-group-primary am-input-group-sm">
-    <input type="text" class="am-form-field" placeholder="用户名" name="username" id="search-user-input">
+    <input type="text" class="am-form-field" placeholder="例：kkksc03，可跳转站长主页" name="username" id="search-user-input">
 </div>
 <p>
     <button class="am-btn am-btn-danger am-btn-sm" id="search-user">跳转</button>
 </p>
 `)
-    var goto_user = () => {
+        const func = () => {
         $search_user.prop("disabled", true)
         $.get("/api/user/search?keyword=" + $("[name=username]").val(), res => {
             if (! res.users[0]) {
@@ -1041,9 +1213,9 @@ mod.reg_board("search-user", "查找用户名", $board => {
             else
                 location.href = "/user/" + res.users[0].uid
         })
-    }
-    const $search_user = $("#search-user").on("click", goto_user)
-    $("#search-user-input").keydown((e)=>{if(e.keyCode==13){goto_user()}})
+        }
+        const $search_user = $("#search-user").on("click", func)
+    $("#search-user-input").keydown((e)=>{if(e.keyCode==13) func()})
 })
 
 $(() => mod.execute())
