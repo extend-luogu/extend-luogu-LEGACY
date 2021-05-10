@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           extend-luogu
 // @namespace      http://tampermonkey.net/
-// @version        5.4.1
+// @version        5.4.2
 // @description    Make Luogu more powerful.
 // @author         optimize_2 ForkKILLET minstdfx haraki
 // @match          https://*.luogu.com.cn/*
@@ -1163,6 +1163,23 @@ mod.reg("copy-code-block", "一键复制代码块", "@/*", () => {
         $(`<body><text>
 </text></body>`).prependTo($cb[i])
         const btn = $(`<div class="exlg-copy">复制</div>`)
+        var language = ""
+        if($e.find("code").attr("data-rendered-lang")){
+            language = $e.find("code").attr("data-rendered-lang").toString()
+        }
+        if($e.find("code").attr("class")){
+            const str = $e.find("code").attr("class").toString()
+            if(str.indexOf("hljs") != -1){
+                language = str.substr(9,str.length-14);
+            }
+            else{
+                language = str.substr(9,str.length-9);
+            }
+        }
+        if(language == "cpp"){
+            language = "c++"
+        }
+        console.log("Language:",language)
         btn.on("click", () => {
             const $textarea = $("<textarea></textarea>")
                 .appendTo($("body"))
@@ -1173,7 +1190,7 @@ mod.reg("copy-code-block", "一键复制代码块", "@/*", () => {
             document.execCommand("copy")
             $textarea.remove()
         }).prependTo($cb[i])
-        $(`<span style="font-size:15px;font-weight:bold">源代码</span>`).prependTo($cb[i])
+        $(`<span style="font-size:15px;font-weight:bold">${language}源代码</span>`).prependTo($cb[i])
     })
 }, `
 .exlg-copy {
