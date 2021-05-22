@@ -1240,7 +1240,7 @@ mod.reg_board("search-user", "查找用户名", $board => {
 })
 
 mod.reg("problem-export", "题目导出", "@/*", () => {
-    if (window.location.pathname.indexOf("problem") == -1 || window.location.pathname.indexOf("list") != -1) {
+    if (!/\/problem\/(P|CF|AT|SP|UVA)[1-9]\d*$/.test(location.pathname)) {
         return
     }
     const btn = $(`
@@ -1248,7 +1248,7 @@ mod.reg("problem-export", "题目导出", "@/*", () => {
     style="border-color: rgb(52, 152, 219); background-color: rgb(52, 152, 219);">
     导出题目
     </button>
-    `)
+    `), submit_button = $("div").val("提交答案")
     btn.on("click", () => {
         const defaultPorts = [
             1327, // cpbooster
@@ -1293,6 +1293,15 @@ mod.reg("problem-export", "题目导出", "@/*", () => {
         }
     })
     btn.appendTo($("div.operation"))
+    let tap_number = 0
+    submit_button.on("click", () => {
+        tap_number += 1
+        console.log(tap_number)
+        if (tap_number % 6 == 0) {
+            btn.remove()
+            btn.appendTo($("div.operation"))
+        }
+    })
 })
 
 $(() => mod.execute())
