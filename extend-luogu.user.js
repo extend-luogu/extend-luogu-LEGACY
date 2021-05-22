@@ -1262,7 +1262,6 @@ mod.reg("problem-export", "题目导出", "@/*", () => {
         try {
             lg_content(window.location.pathname + window.location.search, res => {
                 const problem = res.currentData.problem, contest = res.currentData.contest
-                console.log(res.currentData)
                 const exportData = {
                     name:problem.title,
                     group:contest ? contest.name : "题目列表",
