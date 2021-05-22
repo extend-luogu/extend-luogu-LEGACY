@@ -1240,7 +1240,7 @@ mod.reg_board("search-user", "查找用户名", $board => {
 })
 
 mod.reg("problem-export", "题目导出", "@/*", () => {
-    if (!/\/problem\/(P|CF|AT|SP|UVA)[1-9]\d*$/.test(location.pathname)) {
+    if (!/\/problem\/(U|T|P|CF|AT|SP|UVA)[1-9]\d*$/.test(location.pathname)) {
         return
     }
     const btn = $(`
