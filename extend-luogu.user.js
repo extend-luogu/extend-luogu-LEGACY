@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           extend-luogu
 // @namespace      http://tampermonkey.net/
-// @version        5.5.2
+// @version        5.5.3
 // @description    Make Luogu more powerful.
 // @author         optimize_2 ForkKILLET minstdfx haraki swift-zym
 // @match          https://*.luogu.com.cn/*
@@ -1240,7 +1240,7 @@ mod.reg_board("search-user", "查找用户名", $board => {
 })
 
 mod.reg("problem-export", "题目导出", "@/*", () => {
-    if (window.location.pathname.indexOf("problem") == -1) {
+    if (window.location.pathname.indexOf("problem") == -1 || window.location.pathname.indexOf("list") != -1) {
         return
     }
     const btn = $(`
