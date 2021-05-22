@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           extend-luogu
 // @namespace      http://tampermonkey.net/
-// @version        5.5
+// @version        5.5.1
 // @description    Make Luogu more powerful.
 // @author         optimize_2 ForkKILLET minstdfx haraki
 // @match          https://*.luogu.com.cn/*
@@ -9,13 +9,16 @@
 // @match          https://service-ig5px5gh-1305163805.sh.apigw.tencentcs.com/release/APIGWHtmlDemo-1615602121
 // @match          https://service-psscsax9-1305163805.sh.apigw.tencentcs.com/release/exlg-version
 // @match          https://www.bilibili.com/robots.txt?*
+// @match          http://localhost/*
 // @require        https://cdn.luogu.com.cn/js/jquery-2.1.1.min.js
 // @require        https://cdn.bootcdn.net/ajax/libs/js-xss/0.3.3/xss.min.js
 // @require        https://cdn.bootcdn.net/ajax/libs/marked/2.0.1/marked.min.js
 // @grant          GM_addStyle
 // @grant          GM_getValue
 // @grant          GM_setValue
+// @grant          GM_xmlhttpRequest
 // @grant          unsafeWindow
+// @connect        localhost
 // ==/UserScript==
 
 // ==Utilities==
@@ -684,9 +687,9 @@ mod.reg("benben", "全网犇犇", "@/", () => {
 })
 
 mod.reg_board("rand-problem-ex", "随机跳题ex", $board => {
-	$("[name='gotorandom']").text("随机")
-	const $start_rand = $(`<button class="am-btn am-btn-primary am-btn-sm" name="gotorandomex" id="gtrdex">随机ex</button>`)
-	$start_rand.appendTo($("[name='gotorandom']").parent())
+    $("[name='gotorandom']").text("随机")
+    const $start_rand = $(`<button class="am-btn am-btn-primary am-btn-sm" name="gotorandomex" id="gtrdex">随机ex</button>`)
+    $start_rand.appendTo($("[name='gotorandom']").parent())
     $(`
 <div id="exlg-dash-0" class = "exlg-rand-settings">...</div>
 <span id="exlg-dash-0-window" class="exlg-window">
@@ -695,90 +698,90 @@ mod.reg_board("rand-problem-ex", "随机跳题ex", $board => {
 	</p>
 </span>
 `).appendTo($("[name='gotorandom']").parent())
-	const iLoveMinecraft = [0,1,2,3,4,5,6,7]
-	const iLoveTouhou = [0,1,2,3,4]
-	const fackYouCCF = ["P","CF","SP","AT","UVA"]
-	var difficulty_select = GM_getValue("mod-rand-difficulty",[0,0,0,0,0,0,0,0])
-	var source_select = GM_getValue("mod-rand-source",[0,0,0,0,0])
-	var difficulty_html = [
-		`<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-red">入门</div>`,
-		`<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-orange">普及-</div>`,
-		`<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-yellow">普及/提高-</div>`,
-		`<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-green">普及+/提高</div>`,
-		`<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-blue">提高+/省选-</div>`,
-		`<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-purple">省选/NOI-</div>`,
-		`<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-black">NOI/NOI+/CTSC</div>`,
-		`<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-grey">暂无评定</div>`
-	]
-	var source_html = [
-		`<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-red">洛谷题库</div>`,
-		`<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-orange">Codeforces</div>`,
-		`<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-yellow">SPOJ</div>`,
-		`<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-green">ATcoder</div>`,
-		`<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-blue">UVA</div>`
-	]
-	const $diffs = $("#exlg-rand-diffs")
-	$(`<h3>设置题目难度</h3>`).appendTo($diffs)
-	iLoveMinecraft.forEach( i =>{
-		const $m = $(`
+    const iLoveMinecraft = [0, 1, 2, 3, 4, 5, 6, 7]
+    const iLoveTouhou = [0, 1, 2, 3, 4]
+    const fackYouCCF = ["P", "CF", "SP", "AT", "UVA"]
+    const difficulty_select = GM_getValue("mod-rand-difficulty", [0, 0, 0, 0, 0, 0, 0, 0])
+    const source_select = GM_getValue("mod-rand-source", [0, 0, 0, 0, 0])
+    const difficulty_html = [
+        `<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-red">入门</div>`,
+        `<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-orange">普及-</div>`,
+        `<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-yellow">普及/提高-</div>`,
+        `<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-green">普及+/提高</div>`,
+        `<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-blue">提高+/省选-</div>`,
+        `<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-purple">省选/NOI-</div>`,
+        `<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-black">NOI/NOI+/CTSC</div>`,
+        `<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-grey">暂无评定</div>`
+    ]
+    const source_html = [
+        `<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-red">洛谷题库</div>`,
+        `<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-orange">Codeforces</div>`,
+        `<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-yellow">SPOJ</div>`,
+        `<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-green">ATcoder</div>`,
+        `<div id="exlg-dash-0" class = "exlg-difficulties exlg-color-blue">UVA</div>`
+    ]
+    const $diffs = $("#exlg-rand-diffs")
+    $(`<h3>设置题目难度</h3>`).appendTo($diffs)
+    iLoveMinecraft.forEach(i => {
+        const $m = $(`
 <li>
     <input type="checkbox" />
-    `+difficulty_html[i]+`<br/>
+    ` + difficulty_html[i] + `<br/>
 </li>
 		`).appendTo($diffs)
-		$m.children("input")
-		.prop("checked", difficulty_select[i]==1)
-		.on("change", ()=>{
-			difficulty_select[i]=!difficulty_select[i]
-		})
-	})
-	$(`<h3>设置题目来源</h3>`).appendTo($diffs)
-	iLoveTouhou.forEach( i =>{
-		const $m = $(`
+        $m.children("input")
+            .prop("checked", difficulty_select[i] == 1)
+            .on("change", () => {
+                difficulty_select[i] = !difficulty_select[i]
+            })
+    })
+    $(`<h3>设置题目来源</h3>`).appendTo($diffs)
+    iLoveTouhou.forEach(i => {
+        const $m = $(`
 <li>
     <input type="checkbox" />
-    `+source_html[i]+`<br/>
+    ` + source_html[i] + `<br/>
 </li>
 		`).appendTo($diffs)
-		$m.children("input")
-		.prop("checked", source_select[i]==1)
-		.on("change", ()=>{
-			source_select[i]=!source_select[i]
-		})
-	})
-	$(`<br>`).appendTo($diffs)
-	const save_rdpb = $(`<button class="am-btn am-btn-primary am-btn-sm" name="saverandom">保存</button>`)
-	save_rdpb.on("click",_ => {
-		GM_setValue("mod-rand-difficulty",difficulty_select)
-		GM_setValue("mod-rand-source",source_select)
-		$("#exlg-dash-0-window").toggle()
-	})
-	save_rdpb.appendTo($diffs)
-	$("#exlg-dash-0").on("click", _ => $("#exlg-dash-0-window").toggle())
-	const HREF_NEXT = () => {
-		//console.log("IAKIOI")
-		var difs = []
-		iLoveMinecraft.forEach( i =>{
-			if (difficulty_select[i] != 0) {
-				if(i == 7) {
-					difs.push(0)
-				}
-				else difs.push(i+1)
-			}
-		})
-		if (difs.length == 0) {
-			difs = [0,1,2,3,4,5,6,7]
-		}
-		var srcs = []
-		iLoveTouhou.forEach( i =>{
-			if (source_select[i] != 0) srcs.push(i)
-		})
-		if (srcs.length == 0) {
-			srcs = [0]
-		}
-		const difficulty = difs[Math.floor(Math.random()*difs.length)];
-		//["P","CF","SP","AT","UVA"]
-        const source = fackYouCCF[srcs[Math.floor(Math.random()*srcs.length)]]
+        $m.children("input")
+            .prop("checked", source_select[i] == 1)
+            .on("change", () => {
+                source_select[i] = !source_select[i]
+            })
+    })
+    $(`<br>`).appendTo($diffs)
+    const save_rdpb = $(`<button class="am-btn am-btn-primary am-btn-sm" name="saverandom">保存</button>`)
+    save_rdpb.on("click", _ => {
+        GM_setValue("mod-rand-difficulty", difficulty_select)
+        GM_setValue("mod-rand-source", source_select)
+        $("#exlg-dash-0-window").toggle()
+    })
+    save_rdpb.appendTo($diffs)
+    $("#exlg-dash-0").on("click", _ => $("#exlg-dash-0-window").toggle())
+    const HREF_NEXT = () => {
+        //console.log("IAKIOI")
+        let difs = []
+        iLoveMinecraft.forEach(i => {
+            if (difficulty_select[i] != 0) {
+                if (i == 7) {
+                    difs.push(0)
+                }
+                else difs.push(i + 1)
+            }
+        })
+        if (difs.length == 0) {
+            difs = [0, 1, 2, 3, 4, 5, 6, 7]
+        }
+        let srcs = []
+        iLoveTouhou.forEach(i => {
+            if (source_select[i] != 0) srcs.push(i)
+        })
+        if (srcs.length == 0) {
+            srcs = [0]
+        }
+        const difficulty = difs[Math.floor(Math.random() * difs.length)]
+        //["P","CF","SP","AT","UVA"]
+        const source = fackYouCCF[srcs[Math.floor(Math.random() * srcs.length)]]
         lg_content(`/problem/list?difficulty=${difficulty}&type=${source}&page=1`,
             res => {
                 const
@@ -797,7 +800,7 @@ mod.reg_board("rand-problem-ex", "随机跳题ex", $board => {
             }
         )
     }
-	$("#gtrdex").on("click", HREF_NEXT)
+    $("#gtrdex").on("click", HREF_NEXT)
 
 
     $("#rand-problem-2").on("click", () => {
@@ -1165,22 +1168,23 @@ mod.reg("copy-code-block", "一键复制代码块", "@/*", () => {
         $(`<body><text>
 </text></body>`).prependTo($cb[i])
         const btn = $(`<div class="exlg-copy">复制</div>`)
-        var language = ""
+        let language = ""
         if ($e.find("code").attr("data-rendered-lang")) {
             language = $e.find("code").attr("data-rendered-lang").toString()
         }
         if ($e.find("code").attr("class")) {
             const str = $e.find("code").attr("class").toString()
-            if (str.indexOf("hljs") != -1){
-                language = str.substr(9,str.length-14);
-            } else {
-                language = str.substr(9,str.length-9);
+            if (str.indexOf("hljs") != -1) {
+                language = str.substr(9, str.length - 14)
+            }
+            else {
+                language = str.substr(9, str.length - 9)
             }
         }
         if (language == "cpp") {
             language = "c++"
         }
-        console.log("Language:",language)
+        console.log("Language:", language)
         btn.on("click", () => {
             const $textarea = $("<textarea></textarea>")
                 .appendTo($("body"))
@@ -1221,7 +1225,7 @@ mod.reg_board("search-user", "查找用户名", $board => {
     <button class="am-btn am-btn-danger am-btn-sm" id="search-user">跳转</button>
 </p>
 `)
-        const func = () => {
+    const func = () => {
         $search_user.prop("disabled", true)
         $.get("/api/user/search?keyword=" + $("[name=username]").val(), res => {
             if (! res.users[0]) {
@@ -1231,9 +1235,65 @@ mod.reg_board("search-user", "查找用户名", $board => {
             else
                 location.href = "/user/" + res.users[0].uid
         })
+    }
+    const $search_user = $("#search-user").on("click", func)
+    $("#search-user-input").keydown((e) => { if (e.keyCode == 13) func() })
+})
+
+mod.reg("problem-export", "题目导出", "@/*", () => {
+    if (window.location.pathname.indexOf("problem") == -1) {
+        return
+    }
+    const btn = $(`
+    <button data-v-370e72e2="" data-v-42c20b13="" type="button" class="lfe-form-sz-middle" data-v-52820d90=""
+    style="border-color: rgb(52, 152, 219); background-color: rgb(52, 152, 219);">
+    导出题目
+    </button>
+    `)
+    btn.on("click", () => {
+        const defaultPorts = [
+            1327, // cpbooster
+            4244, // Hightail
+            6174, // Mind Sport
+            10042, // acmX
+            10043, // Caide and AI Virtual Assistant
+            10045, // CP Editor
+            27121, // Competitive Programming Helper
+        ]
+        try {
+            lg_content(window.location.pathname + window.location.search, res => {
+                const problem = res.currentData.problem, contest = res.currentData.contest
+                const exportData = {
+                    name:problem.title,
+                    group:contest ? contest.name : "题目列表",
+                    url:window.location.href,
+                    memoryLimit:Math.max(...problem.limits.memory) / 1024,
+                    timeLimit:Math.max(...problem.limits.time),
+                    tests:problem.samples.map(sample => {
+                        return {
+                            input:sample[0],
+                            output:sample[1]
+                        }
+                    })
+                }
+                for (const port of defaultPorts) {
+                    GM_xmlhttpRequest({
+                        method: "POST",
+                        url: `http://localhost:${port}`,
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        data:JSON.stringify(exportData)
+                    })
+                }
+                alert("导出成功！")
+            })
         }
-        const $search_user = $("#search-user").on("click", func)
-    $("#search-user-input").keydown((e)=>{if(e.keyCode==13) func()})
+        catch (e) {
+            alert(`导出失败：${e}`)
+        }
+    })
+    btn.appendTo($("div.operation"))
 })
 
 $(() => mod.execute())
