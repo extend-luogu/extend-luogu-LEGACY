@@ -1297,7 +1297,6 @@ mod.reg("problem-export", "题目导出", "@/*", () => {
     let tap_number = 0
     submit_button.on("click", () => {
         tap_number += 1
-        console.log(tap_number)
         if (tap_number % 6 == 0) {
             btn.remove()
             btn.appendTo($("div.operation"))
