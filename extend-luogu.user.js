@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           extend-luogu
 // @namespace      http://tampermonkey.net/
-// @version        5.5.4
+// @version        5.5.5
 // @description    Make Luogu more powerful.
 // @author         optimize_2 ForkKILLET minstdfx haraki swift-zym qinyihao
 // @match          https://*.luogu.com.cn/*
@@ -278,13 +278,10 @@ mod.reg("dash", "控制面板", "@/*", () => {
     $dash.on("click", _ => $win.toggle())
 }, `
 /* dash */
-
 #exlg-dash {
     position: relative;
     display: inline-block;
-
     padding: 1px 10px 3px;
-
     background-color: cornflowerblue;
     color: white;
     border-radius: 6px;
@@ -295,17 +292,13 @@ mod.reg("dash", "控制面板", "@/*", () => {
     top: 35px;
     left: 0px;
     z-index: 65536;
-
     display: none;
     overflow-y: scroll;
-
     width: 250px;
     height: 600px;
     padding: 5px;
-
     background: white;
     color: black;
-
     border-radius: 7px;
     box-shadow: rgb(187 227 255) 0px 0px 7px;
 }
@@ -313,22 +306,17 @@ mod.reg("dash", "控制面板", "@/*", () => {
     list-style: none;
     padding: 0;
 }
-
 #exlg-dash > .exlg-warn {
     position: absolute;
     top: -.5em;
     right: -.5em;
 }
-
 /* global */
-
 .exlg-icon::before {
     display: inline-block;
     width: 1.3em;
     height: 1.3em;
-
     margin-left: 3px;
-
     text-align: center;
     border-radius: 50%;
 }
@@ -338,27 +326,20 @@ mod.reg("dash", "控制面板", "@/*", () => {
 .exlg-icon::after {
     display: none;
     content: attr(name);
-
     margin-left: 5px;
     padding: 0 3px;
-
     background-color: white;
     box-shadow: 0 0 7px deepskyblue;
-
     border-radius: 7px;
 }
-
 .exlg-icon.exlg-info::before {
     content: "i";
-
     color: white;
     background-color: deepskyblue;
     font-style: italic;
 }
-
 .exlg-icon.exlg-warn::before {
     content: "!";
-
     color: white;
     background-color: rgb(231, 76, 60);
     font-style: normal;
@@ -588,7 +569,6 @@ mod.reg("user-css-edit", "编辑用户样式", "@/theme/list", () => {
     box-sizing: border-box;
     padding: 1.3em;
     margin-bottom: 1.3em;
-
     background-color: white;
     box-shadow: 0 0 7px dodgerblue;
 }
@@ -822,20 +802,17 @@ mod.reg_board("rand-problem-ex", "随机跳题ex", $board => {
     position: relative;
     display: inline-block;
 
-    padding: 1px 5px 1px;
+    padding: 3px 5px 3px 5px;
 
-    background-color: cornflowerblue;
     color: white;
     border-radius: 6px;
-    font-size:2px;
+    font-size:12px;
     float:right
 }
 .exlg-difficulties {
     position: relative;
     display: inline-block;
-
     padding: 1px 5px 1px;
-
     color: white;
     border-radius: 6px;
     font-size:1px;
@@ -872,17 +849,13 @@ mod.reg_board("rand-problem-ex", "随机跳题ex", $board => {
     top: 35px;
     left: 0px;
     z-index: 65536;
-
     display: none;
     overflow-y: scroll;
-
     width: 250px;
     height: 300px;
     padding: 5px;
-
     background: white;
     color: black;
-
     border-radius: 7px;
     box-shadow: rgb(187 227 255) 0px 0px 7px;
 }
@@ -1134,30 +1107,25 @@ mod.reg("keyboard-and-cli", "键盘操作与命令行", "@/*", () => {
     position: fixed;
     top: 0;
     z-index: 65536;
-
     display: none;
     width: 100%;
     height: 40px;
-
     background-color: white;
     box-shadow: 0 0 7px dodgerblue;
 }
-
 #exlg-cli-input {
     display: block;
     height: 100%;
     width: 100%;
-
     border: none;
     outline: none;
-
     font-family: "Fira Code", "consolas", "Courier New", monospace;
 }
-
 #exlg-cli-input.error {
     background-color: indianred;
 }
 `)
+
 
 mod.reg("copy-code-block", "一键复制代码块", "@/*", () => {
     const $cb = $("pre:has(> code)")
@@ -1167,6 +1135,7 @@ mod.reg("copy-code-block", "一键复制代码块", "@/*", () => {
         $(`<body><text>
 </text></body>`).prependTo($cb[i])
         const btn = $(`<div class="exlg-copy">复制</div>`)
+        const language_list = ['c', 'cpp', 'pascal', 'python', 'java', 'javascript', 'php', 'latex']
         let language = ""
         if ($e.find("code").attr("data-rendered-lang")) {
             language = $e.find("code").attr("data-rendered-lang").toString()
@@ -1180,14 +1149,21 @@ mod.reg("copy-code-block", "一键复制代码块", "@/*", () => {
                 language = str.substr(9, str.length - 9)
             }
         }
+        if (language.indexOf('ult language-') == 0) {
+            language = language.substr(13)
+        }
+        if (language_list.indexOf(language) == -1) {
+            language = ""
+        }
+        console.log(language_list.indexOf(language))
         if (language == "cpp") {
             language = "c++"
         }
-        console.log("Language:", language)
+        console.log("Language:" + language)
         btn.on("click", () => {
             const $textarea = $("<textarea></textarea>")
                 .appendTo($("body"))
-                .text($e.text().slice(6))
+                .text($e.text().slice(6 + language.length))
                 .select()
             btn.text("复制成功")
             setTimeout(() => btn.text("复制"), 1000)
@@ -1201,16 +1177,25 @@ mod.reg("copy-code-block", "一键复制代码块", "@/*", () => {
     position: relative;
     display: inline-block;
 
-    padding: 1px 5px 1px;
+    padding: 3px 5px 3px 5px;
 
     background-color: cornflowerblue;
     color: white;
     border-radius: 6px;
-    font-size:2px;
+    font-size:12px;
     float:right
 }
 .exlg-copy:hover {
     box-shadow: 0 0 7px dodgerblue;
+}
+.copy-btn {
+    font-size: .8em;
+    float: right;
+    padding: 0 5px;
+}
+.lfe-form-sz-middle {
+    font-size: 0.875em;
+    padding: 0.313em 1em;
 }
 `)
 
