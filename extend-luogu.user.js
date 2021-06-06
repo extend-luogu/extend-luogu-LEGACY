@@ -1239,7 +1239,8 @@ mod.reg("problem-export", "题目导出", "@/*", () => {
     导出题目
     </button>
     `), submit_button = $("div").val("提交答案")
-    btn.on("click", () => {
+    const setbtn = ()=>{
+        btn.on("click", () => {
         const defaultPorts = [
             1327, // cpbooster
             4244, // Hightail
@@ -1282,13 +1283,16 @@ mod.reg("problem-export", "题目导出", "@/*", () => {
             alert(`导出失败：${e}`)
         }
     })
+    }
     btn.appendTo($("div.operation"))
+    setbtn()
     let tap_number = 0
     submit_button.on("click", () => {
         tap_number += 1
         if (tap_number % 6 == 0) {
             btn.remove()
             btn.appendTo($("div.operation"))
+            setbtn()
         }
     })
 })
