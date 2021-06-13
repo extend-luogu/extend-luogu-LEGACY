@@ -3,7 +3,7 @@
 // @namespace      http://tampermonkey.net/
 // @version        5.5.7
 // @description    Make Luogu more powerful.
-// @author         optimize_2 ForkKILLET minstdfx haraki swift-zym qinyihao
+// @author         optimize_2 ForkKILLET minstdfx haraki swift-zym qinyihao oimaster
 // @match          https://*.luogu.com.cn/*
 // @match          https://*.luogu.org/*
 // @match          https://service-ig5px5gh-1305163805.sh.apigw.tencentcs.com/release/APIGWHtmlDemo-1615602121
@@ -357,7 +357,7 @@ mod.reg("dash", "控制面板", "@/*", () => {
 }
 `)
 
-mod.reg("emoticon", "表情输入", [ "@/discuss/lists", "@/discuss/show/*" ], () => {
+mod.reg("emoticon", "表情输入", [ "@/discuss/lists", "@/discuss/show/*", "@/blogAdmin/article/new", "@/blogAdmin/article/edit/*"], () => {
     /*
     const emo = [
         [ "62224", [ "qq" ] ],
