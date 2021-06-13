@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           extend-luogu
 // @namespace      http://tampermonkey.net/
-// @version        5.5.6
+// @version        5.5.7
 // @description    Make Luogu more powerful.
 // @author         optimize_2 ForkKILLET minstdfx haraki swift-zym qinyihao oimaster
 // @match          https://*.luogu.com.cn/*
@@ -19,6 +19,7 @@
 // @grant          GM_xmlhttpRequest
 // @grant          unsafeWindow
 // @connect        localhost
+// @connect        luogulo.gq
 // ==/UserScript==
 
 // ==Utilities==
@@ -84,9 +85,17 @@ const exlg_update_log = msg => uindow.show_alert("extend-luogu Ver. ${ GM_info.s
 const mod = {
     _: [],
 
-    reg: (name, info, path, func, styl) => mod._.push({
+    reg: (name, info, path, func, styl) => {
+    mod._.push({
         name, info, path: Array.isArray(path) ? path : [ path ], func, styl
-    }),
+    })
+    if(!GM_getValue(name)){
+        GM_setValue(name,true)
+        let map = GM_getValue("mod-map")
+        if(!map)map={}
+        map[name]=true
+    }
+    },
     reg_main: (name, info, path, func, styl) =>
         mod.reg("@" + name, info, path, () => (func(), false), styl),
     reg_user_tab: (name, info, tab, vars, func, styl) =>
@@ -1465,6 +1474,27 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/*", () => {
 
 
 
+})
+
+
+mod.reg("discuss-save", "讨论保存", "@/*", () => {
+    if (!/\/discuss\/show\/[1-9]\d*$/.test(location.pathname)) {
+        return
+    }
+    GM_xmlhttpRequest({
+        method: "GET",
+        url: `https://luogulo.gq/save.php?url=${window.location.href}`,
+        onload: function(res){
+            if(res.status === 200){
+                log('Discuss saved')
+            }else{
+                log(`Fail: ${res}`)
+            }
+        },
+        onerror : function(err){
+            log(`Error:${err}`)
+        }
+    })
 })
 
 $(() => mod.execute())
