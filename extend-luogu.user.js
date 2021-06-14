@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           extend-luogu
 // @namespace      http://tampermonkey.net/
-// @version        5.5.6
+// @version        5.5.7
 // @description    Make Luogu more powerful.
 // @author         optimize_2 ForkKILLET minstdfx haraki swift-zym qinyihao oimaster
 // @match          https://*.luogu.com.cn/*
@@ -520,32 +520,34 @@ mod.reg_user_tab("user-problem", "题目颜色和比较", "practice", () => ({
         "rgb(14, 29, 105)"
     ]
 }), ({ color }) => {
-    $(".exlg-counter").remove()
-    $(".problems").each((i, ps, $ps = $(ps)) => {
-        const my = uindow._feInjection.currentData[ [ "submittedProblems", "passedProblems" ][i] ]
-        $ps.find("a").each((d, p, $p = $(p)) =>
-            $p.removeClass("color-default").css("color", color[ my[d].difficulty ])
-        )
-        $ps.before($(`<span id="exlg-problem-count-${i}" class="exlg-counter">${ my.length }</span>`))
-    })
-
-    if (uindow._feInjection.currentData.user.uid === uindow._feInjection.currentUser.uid) return
-
-    lg_content(`/user/${ uindow._feInjection.currentUser.uid }`, res => {
-        const my = res.currentData.passedProblems
-        const ta = uindow._feInjection.currentData.passedProblems
-
-        let same = 0
-        const $ps = $($(".problems")[1])
-        $ps.find("a").each((d, p, $p = $(p)) => {
-            if (my.some(m => m.pid === ta[d].pid)) {
-                same ++
-                $p.css("backgroundColor", "rgba(82, 196, 26, 0.3)")
-            }
+    setTimeout(function(){
+        $(".exlg-counter").remove()
+        $(".problems").each((i, ps, $ps = $(ps)) => {
+            const my = uindow._feInjection.currentData[ [ "submittedProblems", "passedProblems" ][i] ]
+            $ps.find("a").each((d, p, $p = $(p)) =>
+                               $p.removeClass("color-default").css("color", color[ my[d].difficulty ])
+                              )
+            $ps.before($(`<span id="exlg-problem-count-${i}" class="exlg-counter">${ my.length }</span>`))
         })
-        $("#exlg-problem-count-1").html(`<span class="exlg-counter">${ ta.length } <> ${ my.length } : ${same}`
-            + `<i class="exlg-icon exlg-info" name="ta 的 &lt;&gt; 我的 : 相同"></i></span>`)
-    })
+
+        if (uindow._feInjection.currentData.user.uid === uindow._feInjection.currentUser.uid) return
+
+        lg_content(`/user/${ uindow._feInjection.currentUser.uid }`, res => {
+            const my = res.currentData.passedProblems
+            const ta = uindow._feInjection.currentData.passedProblems
+
+            let same = 0
+            const $ps = $($(".problems")[1])
+            $ps.find("a").each((d, p, $p = $(p)) => {
+                if (my.some(m => m.pid === ta[d].pid)) {
+                    same ++
+                    $p.css("backgroundColor", "rgba(82, 196, 26, 0.3)")
+                }
+            })
+            $("#exlg-problem-count-1").html(`<span class="exlg-counter">${ ta.length } <> ${ my.length } : ${same}`
+                                            + `<i class="exlg-icon exlg-info" name="ta 的 &lt;&gt; 我的 : 相同"></i></span>`)
+        })
+    },300);
 }, `
 .main > .card > h3 {
     display: inline-block;
