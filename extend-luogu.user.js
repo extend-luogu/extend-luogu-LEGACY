@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           extend-luogu
 // @namespace      http://tampermonkey.net/
-// @version        5.9.1
+// @version        5.9.2
 // @description    Make Luogu more powerful.
 // @author         optimize_2 ForkKILLET minstdfx haraki swift-zym qinyihao oimaster
 // @match          https://*.luogu.com.cn/*
@@ -1159,6 +1159,7 @@ mod.reg("keyboard-and-cli", "键盘操作与命令行", "@/*", () => {
 
 
 mod.reg("copy-code-block", "代码块功能优化", "@/*", () => {
+	log("copy-code!", GM_getValue('code-fonts-val', ''))
 	const language_show = GM_getValue("copy-code-block-language", true)
 	const func_code = () => {
 		const $cb = $("pre:has(> code)")
@@ -1210,11 +1211,12 @@ mod.reg("copy-code-block", "代码块功能优化", "@/*", () => {
 			if (!$cb.children('code').hasClass('hljs')) {
 				$cb.children('code').addClass('hljs').css('background', 'white')//style="background: white"
 			}
-			if (GM_getValue('code-fonts-val', '') != '') {
+			if (GM_getValue('code-fonts-val', '') != '' && GM_getValue('code-fonts-val', '')) {
 				$cb.children('code').css('font-family', GM_getValue('code-fonts-val', ''))
 			}
 		})
 	}
+	func_code()
 	if (window.location.href === "https://www.luogu.com.cn/" || window.location.href === "https://www.luogu.com.cn") {
 		$('.feed-selector').on("click", () => {
 			setTimeout(func_code, 300)
@@ -1227,7 +1229,9 @@ mod.reg("copy-code-block", "代码块功能优化", "@/*", () => {
 					$('.lfe-h3').text($('.lfe-h3').text() + '-' + $($(".value.lfe-caption")[0]).text()).attr("exlg-language-show", '')
 				}
 				const $cb = $("pre:has(> code)")
-				$cb.children('code').css('font-family', GM_getValue('code-fonts-val', ''))
+				if (GM_getValue('code-fonts-val', '') != '' && GM_getValue('code-fonts-val', '')) {
+					$cb.children('code').css('font-family', GM_getValue('code-fonts-val', ''))
+				}
 				$cb.children('code').addClass('hljs').css('background', 'white')
 			}, 100)
 		}) // lack of hook
@@ -1557,7 +1561,7 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
 		$(`<div><h4>设置代码块字体</h4></div>`)
 		.append(
 			$(`<div data-v-a7f7c968="" data-v-61c90fba="" class="refined-input input-wrap input frame" data-v-22efe7ee=""></div>`).append(
-				$(`<input data-v-a7f7c968="" class="lfe-form-sz-middle" placeholder="填写你想要的字体~">`).val(GM_getValue('code-fonts-val', ''))
+				$(`<input data-v-a7f7c968="" class="lfe-form-sz-middle" placeholder="填写你想要的字体~" id="code-fonts-input">`).val(GM_getValue('code-fonts-val', ''))
 			)
 		)
 		.append(
@@ -1585,7 +1589,7 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
 		
 		$(`<div><h4>自定义css</h4></div>`).append(
 			$(`<div class="am-form-group am-form"></div>`).append(
-				$(`<textarea rows="3"` + ((GM_getValue('code-fonts-val', '') != '') ? (`style="font-family: ` + GM_getValue('code-fonts-val', '') + `"`) : (``)) +`></textarea>`).val(GM_getValue("user-css"))
+				$(`<textarea rows="3" id="custom-css-input"` + ((GM_getValue('code-fonts-val', '') != '') ? (`style="font-family: ` + GM_getValue('code-fonts-val', '') + `"`) : (``)) +`></textarea>`).val(GM_getValue("user-css"))
 			)
 		)
 		.append(
