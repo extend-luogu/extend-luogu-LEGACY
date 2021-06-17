@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           extend-luogu
 // @namespace      http://tampermonkey.net/
-// @version        5.9.0
+// @version        5.9.1
 // @description    Make Luogu more powerful.
 // @author         optimize_2 ForkKILLET minstdfx haraki swift-zym qinyihao oimaster
 // @match          https://*.luogu.com.cn/*
@@ -175,14 +175,14 @@ const mod = {
 
         mod.map = GM_getValue("mod-map")
 
-		log(mod.map) //yjp flaged
+		//log(mod.map) //yjp flaged
 
 
         const map_init = mod.map ? false : (mod.map = {})
         for (const m of mod._)
             m.on = map_init ? (mod.map[ m.name ] = true) : mod.map[ m.name ]
 		unclosable_list.forEach(__OwO__ => {
-			console.log(__OwO__ + "is now true")
+			//console.log(__OwO__ + "is now true")
 			mod.map[__OwO__] = true
 		})
         for (const m of mod._) {
@@ -476,7 +476,7 @@ mod.reg_chore("update", "脚本升级", "1D", "@/*", () => {
         loaded = true
     }
     uindow.addEventListener("message", e => {
-        log("Listening message:", e.data)
+        log("Listening message(in update):", e.data)
         if (e.data[0] !== "update") return
         e.data.shift()
 
@@ -494,6 +494,17 @@ mod.reg_chore("update", "脚本升级", "1D", "@/*", () => {
             .replace("==", `<span style="color: #5eb95e;">==</span>`)
             .replace("<<", `<span style="color: #e74c3c;">&lt;&lt;</span>`)
         )
+		$(`#newest-version-display`).html(latest)
+		if(op === "<<") {
+			$(`#newest-version-display`).css("color", "#e74c3c")
+		}
+		if(op === "==") {
+			$(`#newest-version-display`).css("color", "#e74c3c")
+		}
+		if(op === ">>") {
+			$(`#newest-version-display`).css("color", "#66ccff")
+		}
+		
     })
 })
 
@@ -1382,12 +1393,14 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
 			})
 		return $fte
 	}
+	
 	const href_list = ['information', 'preference', 'security', 'extension', 'extension-admin']
 	if (window.location.href == "https://www.luogu.com.cn/user/setting" || window.location.href.indexOf("https://www.luogu.com.cn/user/setting#") == 0) {
 		if (window.location.href == "https://www.luogu.com.cn/user/setting" || href_list.indexOf(window.location.href.substr(38)) == -1) {
             //log('23333')
-			window.location.href = "https://www.luogu.com.cn/user/setting#information"
+			//window.location.href = "https://www.luogu.com.cn/user/setting#information"
 		}
+		
 		const $lg_entry = $('.items').children('li')
 		const $lg_form_layout = $('.padding-default')
 	    $lg_entry.hide()
@@ -1395,7 +1408,7 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
 		const $ex_admin_form_layout = $(`<div data-v-796309f8="" data-v-7765a18d="" class="card padding-default" id="exlg-padding" data-v-6febb0e8=""><div data-v-22efe7ee="" data-v-61c90fba="" data-v-7765a18d="" class="exlg-admin-form-layout" data-v-796309f8=""></div></div>`).hide().appendTo($('.full-container'))
 		//set the layout
 		$(
-`<div data-v-22efe7ee="" class="row" id="ex-settings-module-switch-layout">
+`<div data-v-22efe7ee="" class="row">
 	<span data-v-22efe7ee="">
 		<span data-v-9a2394ca="" data-v-22efe7ee="">模块开关</span>
 	</span><div data-v-22efe7ee=""><div data-v-9a2394ca="" data-v-22efe7ee="" id="ex-settings-module-switch">
@@ -1403,7 +1416,7 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
 	</div></div>
 </div>`).appendTo($ex_form_layout)
 		$(
-`<div data-v-22efe7ee="" class="row" id="ex-settings-module-settings-layout">
+`<div data-v-22efe7ee="" class="row">
 	<span data-v-22efe7ee="">
 		<span data-v-9a2394ca="" data-v-22efe7ee="">模块设置</span>
 	</span><div data-v-22efe7ee=""><div data-v-9a2394ca="" data-v-22efe7ee="" id="ex-settings-module-settings">
@@ -1411,21 +1424,21 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
 	</div></div>
 </div>`).appendTo($ex_form_layout)
 		$(
-`<div data-v-22efe7ee="" class="row" id="ex-settings-advanced-settings-layout">
+`<div data-v-22efe7ee="" class="row">
 	<span data-v-22efe7ee="">
 		<span data-v-9a2394ca="" data-v-22efe7ee="">高级设置</span>
 	</span><div data-v-22efe7ee=""><div data-v-9a2394ca="" data-v-22efe7ee="" id="ex-settings-advanced-settings">
 		<p data-v-9a2394ca="" data-v-22efe7ee="" class="lfe-caption">一些奇怪的东西。</p>
 	</div></div>
 </div>`).appendTo($ex_form_layout)
-
+		
 
 		//end.
 
 		//set the admin layout.
 
 		$(
-`<div data-v-22efe7ee="" class="row" id="ex-settings-fuck-you-layout">
+`<div data-v-22efe7ee="" class="row">
 	<span data-v-22efe7ee="">
 		<span data-v-9a2394ca="" data-v-22efe7ee="">意见反馈</span>
 	</span><div data-v-22efe7ee=""><div data-v-9a2394ca="" data-v-22efe7ee="" id="ex-settings-fuck-you">
@@ -1435,48 +1448,15 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
 		
 		
 		$(
-`<div data-v-22efe7ee="" class="row" id="ex-settings-update-versions-layout">
+`<div data-v-22efe7ee="" class="row">
 	<span data-v-22efe7ee="">
 		<span data-v-9a2394ca="" data-v-22efe7ee="">版本&更新</span>
 	</span><div data-v-22efe7ee=""><div data-v-9a2394ca="" data-v-22efe7ee="" id="ex-settings-update-versions">
-		<p data-v-9a2394ca="" data-v-22efe7ee="" class="lfe-caption">当前版本为：${ GM_info.script.version }
-		<text> </text>
-		<button data-v-370e72e2="" data-v-61c90fba="" type="button" class="lfe-form-sz-middle" data-v-22efe7ee="" style="font-family: Microsoft YaHei;border-color: rgb(52, 152, 219); background-color: rgb(52, 152, 219);" id="button-show-updlog">更新日志</button>
-		</p>
-		<p data-v-9a2394ca="" data-v-22efe7ee="" class="lfe-caption"><text id="settings-newest-version">最新版本为：${ GM_info.script.version }</text>
-		<text> </text>
-		<button data-v-370e72e2="" data-v-61c90fba="" type="button" class="lfe-form-sz-middle" data-v-22efe7ee="" style="font-family: Microsoft YaHei;border-color: rgb(52, 152, 219); background-color: rgb(52, 152, 219);">检查更新</button>
-		</p>
-		
-		<p data-v-9a2394ca="" data-v-22efe7ee="" class="lfe-caption">更新源
-		<text> </text>
-		<a href="https://github.com/optimize-2/extend-luogu/raw/main/extend-luogu.user.js">
-			<button data-v-370e72e2="" data-v-61c90fba="" type="button" class="lfe-form-sz-middle" data-v-22efe7ee="" style="font-family: Microsoft YaHei;border-color: rgb(231, 76, 60); background-color: rgb(231, 76, 60);">Raw</button>
-		</a>
-		<text> </text>
-		<a href="https://cdn.jsdelivr.net/gh/optimize-2/extend-luogu@latest/extend-luogu.user.js">
-			<button data-v-370e72e2="" data-v-61c90fba="" type="button" class="lfe-form-sz-middle" data-v-22efe7ee="" style="font-family: Microsoft YaHei;border-color: rgb(52, 152, 219); background-color: rgb(52, 152, 219);">Jsdelivr</button>
-		</a>
-		<text> </text>
-		<a href="https://github.com/optimize-2/extend-luogu">
-			<button data-v-370e72e2="" data-v-61c90fba="" type="button" class="lfe-form-sz-middle" data-v-22efe7ee="" style="font-family: Microsoft YaHei;border-color: rgb(0, 0, 0); background-color: rgb(0, 0, 0);">Github</button>
-		</a>
-		<text> </text>
-		<a href="https://hub.fastgit.org/optimize-2/extend-luogu/raw/main/extend-luogu.user.js">
-			<button data-v-370e72e2="" data-v-61c90fba="" type="button" class="lfe-form-sz-middle" data-v-22efe7ee="" style="font-family: Microsoft YaHei;border-color: rgb(82, 196, 26); background-color: rgb(82, 196, 26);">FastGit</button>
-		</a>
-		</p>
 		
 	</div></div>
 </div>`).appendTo($ex_admin_form_layout)
-		$("#button-show-updlog").on("click", () => {
-			GM_deleteValue("exlg-last-used-version")
-			window.location.href = "https://www.luogu.com.cn/"
-		})
-
-
 		$(
-`<div data-v-22efe7ee="" class="row" id="ex-settings-features-laboratory-layout">
+`<div data-v-22efe7ee="" class="row">
 	<span data-v-22efe7ee="">
 		<span data-v-9a2394ca="" data-v-22efe7ee="">实验性玩法</span>
 	</span><div data-v-22efe7ee=""><div data-v-9a2394ca="" data-v-22efe7ee="" id="ex-settings-features-laboratory">
@@ -1484,7 +1464,7 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
 	</div></div>
 </div>`).appendTo($ex_admin_form_layout)
 		$(
-`<div data-v-22efe7ee="" class="row" id="ex-settings-data-debug-layout">
+`<div data-v-22efe7ee="" class="row">
 	<span data-v-22efe7ee="">
 		<span data-v-9a2394ca="" data-v-22efe7ee="">数据&调试</span>
 	</span><div data-v-22efe7ee=""><div data-v-9a2394ca="" data-v-22efe7ee="" id="ex-settings-data-debug">
@@ -1492,99 +1472,23 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
 	</div></div>
 </div>`).appendTo($ex_admin_form_layout)
 		//end.
-		//module设置
-		mod._.forEach(m => {
-			if (!unclosable_list.includes(m.name) && !["user-css-edit", "update"].includes(m.name)) {
-				$(`<div></div>`)
-					.append($get_button_of_mod_map(m.name, m.info))
-					.appendTo($("#ex-settings-module-switch"))
-
-			}
-		})
-
-
-		$(`<div><h4>代码块功能优化</h4></div>`).append($get_button_of_sth("copy-code-block-language", "代码块显示语言", true)).appendTo($("#ex-settings-module-settings"))
-
-
-		$(`<div><h4>设置代码块字体</h4>
-<div data-v-a7f7c968="" data-v-61c90fba="" class="refined-input input-wrap input frame" data-v-22efe7ee=""> <input data-v-a7f7c968="" class="lfe-form-sz-middle" placeholder="填写你想要的字体~" name="codefontsinput" id="code-fonts-input"> </div>
-<p>
-    <button data-v-370e72e2="" data-v-61c90fba="" type="button" class="lfe-form-sz-middle" data-v-22efe7ee="" style="border-color: rgb(231, 76, 60); background-color: rgb(231, 76, 60);" id="code-fonts-button">保存</button>
-</p></div>`).appendTo($('#ex-settings-module-settings'))
-		$('#code-fonts-input').val(GM_getValue('code-fonts-val', ''))
-		$("#code-fonts-button").on('click', () => {
-			//log($('#code-fonts-input').val())
-            let $btn = $("#code-fonts-button")
-			$btn.prop("disabled", true)
-			$btn.text("保存成功")
-			GM_setValue('code-fonts-val', $('#code-fonts-input').val())
-			setTimeout(() => {
-				$btn.removeAttr("disabled")
-				$btn.text("保存")
-			}, 1000)
-		})
-		
-		$(`<div><h4>讨论保存</h4></div>`).append($get_button_of_sth("discuss-auto-save", "讨论自动保存", true)).appendTo($("#ex-settings-module-settings"))
-
-		$(`<div class="am-form-group am-form"><textarea rows="3" id="custom-css-input"></textarea></div><p>
-    <button data-v-370e72e2="" data-v-61c90fba="" type="button" class="lfe-form-sz-middle" data-v-22efe7ee="" style="border-color: rgb(231, 76, 60); background-color: rgb(231, 76, 60);" id="save-css-button">保存</button>
-</p>`).appendTo($(`<div><h4>自定义css</h4></div>`).appendTo($('#ex-settings-module-settings')))
-
-		if (GM_getValue('code-fonts-val', '') != '') {
-			$("#custom-css-input").css('font-family', GM_getValue('code-fonts-val', ''))
-		}
-		$("#custom-css-input").val(GM_getValue("user-css"))
-		$("#save-css-button").on("click", () => {
-            let $btn = $("#save-css-button")
-			$btn.prop("disabled", true)
-			$btn.text("保存成功")
-			GM_setValue("user-css", $("#custom-css-input").val())
-			setTimeout(() => {
-				location.reload()
-			}, 1000)
-		})
-		
-		//数据&调试
-		$(`<div></div>`).append($get_button_of_sth("exlg-debug-mode", "debug_mode", false))
-			.append($(`<text> </text>`))
-			.append($(`<button data-v-370e72e2="" data-v-61c90fba="" type="button" class="lfe-form-sz-middle" data-v-22efe7ee="" style="border-color: rgb(231, 76, 60); background-color: rgb(231, 76, 60);" id="show-all-settings">显示其他设置版块</button>`).on("click", () => {
-				$lg_form_layout.show()
-				$ex_form_layout.show()
-				$ex_admin_form_layout.show()
-				$(`#show-all-settings`).text("隐藏其他设置版块").on("click", () => {
-					location.reload()
-				})
-			}))
-			.appendTo($("#ex-settings-data-debug"))
-		$(`<div>
-<p>
-    <button data-v-370e72e2="" data-v-61c90fba="" type="button" class="lfe-form-sz-middle" data-v-22efe7ee="" style="border-color: rgb(231, 76, 60); background-color: rgb(231, 76, 60);" id="clear-exlg-data-button">清除exlg数据</button>
-	<text></text>
-	<button data-v-370e72e2="" data-v-61c90fba="" type="button" class="lfe-form-sz-middle" data-v-22efe7ee="" style="border-color: rgb(231, 76, 60); background-color: rgb(231, 76, 60);" id="clear-all-data-button">清除GM数据</button>
-</p></div>`).appendTo($('#ex-settings-data-debug'))
-		$("#clear-all-data-button").on('click', () => {
-			GM_listValues().forEach(_ => {
-				GM_deleteValue(_)
-			})
-			window.location.href = "https://www.luogu.com.cn/"
-		})
-		$("#clear-exlg-data-button").on('click', () => {
-			["exlg-last-used-version", "user-css", "mod-chore-rec", "mod-map", "mod-rand-difficulty", "mod-rand-source", "cli-lang", "copy-code-block-language", "code-fonts-val"].forEach(_ => {
-				GM_deleteValue(_)
-			})
-			window.location.href = "https://www.luogu.com.cn/"
-		})
 		
 
+		
 		//这里是顶层的栏目设置
 		//总共5个~
-        const $ex_entry_info = $(`<li data-v-7092f3a4=""><span data-v-7092f3a4="" class="entry" id="exlg-new-settings-entry-info">个人信息</span><!----></li>`).appendTo($('.items'))
-        const $ex_entry_pref = $(`<li data-v-7092f3a4=""><span data-v-7092f3a4="" class="entry" id="exlg-new-settings-entry-pref">使用偏好</span><!----></li>`).appendTo($('.items'))
-        const $ex_entry_secu = $(`<li data-v-7092f3a4=""><span data-v-7092f3a4="" class="entry" id="exlg-new-settings-entry-secu">安全设置</span><!----></li>`).appendTo($('.items'))
-        const $ex_entry_exte = $(`<li data-v-7092f3a4=""><span data-v-7092f3a4="" class="entry" id="exlg-new-settings-entry-exte">扩展设置</span><!----></li>`).appendTo($('.items'))
-        const $ex_entry_admn = $(`<li data-v-7092f3a4=""><span data-v-7092f3a4="" class="entry" id="exlg-new-settings-entry-admn">高级设置</span><!----></li>`).appendTo($('.items'))
+        const $ex_entry_info = $(`<li data-v-7092f3a4=""><span data-v-7092f3a4="" class="entry">个人信息</span><!----></li>`).appendTo($('.items'))
+        const $ex_entry_pref = $(`<li data-v-7092f3a4=""><span data-v-7092f3a4="" class="entry">使用偏好</span><!----></li>`).appendTo($('.items'))
+        const $ex_entry_secu = $(`<li data-v-7092f3a4=""><span data-v-7092f3a4="" class="entry">安全设置</span><!----></li>`).appendTo($('.items'))
+        const $ex_entry_exte = $(`<li data-v-7092f3a4=""><span data-v-7092f3a4="" class="entry">扩展设置</span><!----></li>`).appendTo($('.items'))
+        const $ex_entry_admn = $(`<li data-v-7092f3a4=""><span data-v-7092f3a4="" class="entry">高级设置</span><!----></li>`).appendTo($('.items'))
         const $ex_entry = [$ex_entry_info, $ex_entry_pref, $ex_entry_secu, $ex_entry_exte, $ex_entry_admn]
-		$ex_entry[href_list.indexOf(window.location.href.substr(38))].children().addClass('selected')
+		if (href_list.includes(window.location.href.substr(38))) {
+			$ex_entry[href_list.indexOf(window.location.href.substr(38))].children().addClass('selected')
+		}
+		else {
+			$ex_entry_info.children().addClass('selected')
+		}
 		log(window.location.href.substr(38))
 		if (window.location.href.substr(38) == "extension") {
 			log("extension settings~")
@@ -1638,6 +1542,203 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
 			$ex_admin_form_layout.show()
 			window.location.href = "https://www.luogu.com.cn/user/setting#extension-admin"
 		})
+		
+		//module设置
+		mod._.forEach(m => {
+			if (!unclosable_list.includes(m.name) && !["user-css-edit", "update"].includes(m.name)) {
+				$(`<div></div>`)
+					.append($get_button_of_mod_map(m.name, m.info))
+					.appendTo($("#ex-settings-module-switch"))
+			}
+		})
+
+		$(`<div><h4>代码块功能优化</h4></div>`).append($get_button_of_sth("copy-code-block-language", "代码块显示语言", true)).appendTo($("#ex-settings-module-settings"))
+
+		$(`<div><h4>设置代码块字体</h4></div>`)
+		.append(
+			$(`<div data-v-a7f7c968="" data-v-61c90fba="" class="refined-input input-wrap input frame" data-v-22efe7ee=""></div>`).append(
+				$(`<input data-v-a7f7c968="" class="lfe-form-sz-middle" placeholder="填写你想要的字体~">`).val(GM_getValue('code-fonts-val', ''))
+			)
+		)
+		.append(
+			$(`<p></p>`).append(
+					(() => {
+						const $btn = $(`<button data-v-370e72e2="" data-v-61c90fba="" type="button" class="lfe-form-sz-middle" data-v-22efe7ee="" style="border-color: rgb(231, 76, 60); background-color: rgb(231, 76, 60);">保存</button>`)
+						$btn.on('click', () => {
+							//log($('#code-fonts-input').val())
+							$btn.prop("disabled", true)
+							$btn.text("保存成功")
+							GM_setValue('code-fonts-val', $('#code-fonts-input').val())
+							setTimeout(() => {
+								$btn.removeAttr("disabled")
+								$btn.text("保存")
+							}, 1000)
+						})
+						.mouseenter(() => {$btn.css("background-color", "rgba(231, 76, 60, 0.9)")})
+						.mouseleave(() => {$btn.css("background-color", "rgb(231, 76, 60)")})
+						return $btn
+					})()
+			)
+		).appendTo($('#ex-settings-module-settings'))
+		
+		$(`<div><h4>讨论保存</h4></div>`).append($get_button_of_sth("discuss-auto-save", "讨论自动保存", true)).appendTo($("#ex-settings-module-settings"))
+		
+		$(`<div><h4>自定义css</h4></div>`).append(
+			$(`<div class="am-form-group am-form"></div>`).append(
+				$(`<textarea rows="3"` + ((GM_getValue('code-fonts-val', '') != '') ? (`style="font-family: ` + GM_getValue('code-fonts-val', '') + `"`) : (``)) +`></textarea>`).val(GM_getValue("user-css"))
+			)
+		)
+		.append(
+			$(`<p></p>`).append(
+				(() => {
+					const $btn = $(`<button data-v-370e72e2="" data-v-61c90fba="" type="button" class="lfe-form-sz-middle" data-v-22efe7ee="" style="border-color: rgb(231, 76, 60); background-color: rgb(231, 76, 60);">保存</button>`)
+					$btn.on("click", () => {
+						$btn.prop("disabled", true)
+						$btn.text("保存成功")
+						GM_setValue("user-css", $("#custom-css-input").val())
+						setTimeout(() => {
+							location.reload()
+						}, 1000)
+					})
+					.mouseenter(() => {$btn.css("background-color", "rgba(231, 76, 60, 0.9)")})
+					.mouseleave(() => {$btn.css("background-color", "rgb(231, 76, 60)")})
+					return $btn
+				})()
+			)
+		)
+		.appendTo($('#ex-settings-module-settings'))
+		
+		//数据&调试
+		$(`<div></div>`).append($get_button_of_sth("exlg-debug-mode", "debug_mode", false))
+			.append($(`<text> </text>`))
+			.append(
+			(() => {
+				const $btn = $(`<button data-v-370e72e2="" data-v-61c90fba="" type="button" class="lfe-form-sz-middle" data-v-22efe7ee="" style="border-color: rgb(191, 191, 191); background-color: rgb(191, 191, 191);">显示其他设置版块</button>`)
+				$btn.on("click", () => {
+					$lg_form_layout.show()
+					$ex_form_layout.show()
+					$ex_admin_form_layout.show()
+					$(`#show-all-settings`).text("隐藏其他设置版块").on("click", () => {
+						location.reload()
+					})
+				})
+				.mouseenter(() => {$btn.css("background-color", "rgba(191, 191, 191, 0.9)")})
+				.mouseleave(() => {$btn.css("background-color", "rgb(191, 191, 191)")})
+				return $btn
+			})()
+			)
+			.appendTo($("#ex-settings-data-debug"))
+			
+		$(`<div></div>`).append($(`<p></p>`).append(
+			(() => {
+				const $btn = $(`<button data-v-370e72e2="" data-v-61c90fba="" type="button" class="lfe-form-sz-middle" data-v-22efe7ee="" style="border-color: rgb(231, 76, 60); background-color: rgb(231, 76, 60);">清除exlg数据</button>`)
+				$btn.on("click", () => {
+					GM_listValues().forEach(_ => {
+						GM_deleteValue(_)
+					})
+					window.location.href = "https://www.luogu.com.cn/"
+				})
+				.mouseenter(() => {$btn.css("background-color", "rgba(231, 76, 60, 0.9)")})
+				.mouseleave(() => {$btn.css("background-color", "rgb(231, 76, 60)")})
+				return $btn
+			})()
+		).append($(`<text> </text>`))
+		.append(
+			(() => {
+				const $btn = $(`<button data-v-370e72e2="" data-v-61c90fba="" type="button" class="lfe-form-sz-middle" data-v-22efe7ee="" style="border-color: rgb(14, 29, 105); background-color: rgb(14, 29, 105);">清除GM数据</button>`)
+				$btn.on("click", () => {
+					["exlg-last-used-version", "user-css", "mod-chore-rec", "mod-map", "mod-rand-difficulty", "mod-rand-source", "cli-lang", "copy-code-block-language", "code-fonts-val"].forEach(_ => {
+						GM_deleteValue(_)
+					})
+					window.location.href = "https://www.luogu.com.cn/"
+				})
+				.mouseenter(() => {$btn.css("background-color", "rgba(14, 29, 105, 0.9)")})
+				.mouseleave(() => {$btn.css("background-color", "rgb(14, 29, 105)")})
+				return $btn
+			})()
+		)).appendTo($('#ex-settings-data-debug'))
+		
+		$(`<p data-v-9a2394ca="" data-v-22efe7ee="" class="lfe-caption">当前版本为：${ GM_info.script.version }</p>`)
+		.append($(`<text> </text>`))
+		.append(
+			(() => {
+				const $btn = $(`<button data-v-370e72e2="" data-v-61c90fba="" type="button" class="lfe-form-sz-middle" data-v-22efe7ee="" style="font-family: Microsoft YaHei;border-color: rgb(52, 152, 219); background-color: rgb(52, 152, 219);">更新日志</button>`)
+				$btn.on("click", () => {
+					GM_deleteValue("exlg-last-used-version")
+					window.location.href = "https://www.luogu.com.cn/"
+				})
+				.mouseenter(() => {$btn.css("background-color", "rgba(52, 152, 219, 0.9)")})
+				.mouseleave(() => {$btn.css("background-color", "rgb(52, 152, 219)")})
+				return $btn
+			})()
+		).appendTo($('#ex-settings-update-versions'))
+		
+		$(`<p data-v-9a2394ca="" data-v-22efe7ee="" class="lfe-caption">最新版本为：<text id="newest-version-display">${ GM_info.script.version }</text></p>`)
+		.append($(`<text> </text>`))
+		.append(
+			(() => {
+				const $btn = $(`<button data-v-370e72e2="" data-v-61c90fba="" type="button" class="lfe-form-sz-middle" data-v-22efe7ee="" style="font-family: Microsoft YaHei;border-color: rgb(52, 152, 219); background-color: rgb(52, 152, 219);">检查更新</button>`)
+				$btn.on("click", () => mod.execute("^update"))
+				.mouseenter(() => {$btn.css("background-color", "rgba(52, 152, 219, 0.9)")})
+				.mouseleave(() => {$btn.css("background-color", "rgb(52, 152, 219)")})
+				return $btn
+			})()
+		).appendTo($('#ex-settings-update-versions'))
+		$(`<p data-v-9a2394ca="" data-v-22efe7ee="" class="lfe-caption">更新源</p>`).append($(`<text> </text>`))
+		.append(
+			(() => {
+				const $btn = $(`<button data-v-370e72e2="" data-v-61c90fba="" type="button" class="lfe-form-sz-middle" data-v-22efe7ee="" style="font-family: Microsoft YaHei;border-color: rgb(231, 76, 60); background-color: rgb(231, 76, 60);">Raw</button>`)
+				$btn.on("click", () => {
+					window.location.href = "https://github.com/optimize-2/extend-luogu/raw/main/extend-luogu.user.js"
+				})
+				.mouseenter(() => {$btn.css("background-color", "rgba(231, 76, 60, 0.9)")})
+				.mouseleave(() => {$btn.css("background-color", "rgb(231, 76, 60)")})
+				return $btn
+			})()
+		).append($(`<text> </text>`)).append(
+			(() => {
+				const $btn = $(`<button data-v-370e72e2="" data-v-61c90fba="" type="button" class="lfe-form-sz-middle" data-v-22efe7ee="" style="font-family: Microsoft YaHei;border-color: rgb(52, 152, 219); background-color: rgb(52, 152, 219);">Jsdelivr</button>`)
+				$btn.on("click", () => {
+					window.location.href = "https://cdn.jsdelivr.net/gh/optimize-2/extend-luogu@latest/extend-luogu.user.js"
+				})
+				.mouseenter(() => {$btn.css("background-color", "rgba(52, 152, 219, 0.9)")})
+				.mouseleave(() => {$btn.css("background-color", "rgb(52, 152, 219)")})
+				return $btn
+			})()
+		).append($(`<text> </text>`)).append(
+			(() => {
+				const $btn = $(`<button data-v-370e72e2="" data-v-61c90fba="" type="button" class="lfe-form-sz-middle" data-v-22efe7ee="" style="font-family: Microsoft YaHei;border-color: rgb(0, 0, 0); background-color: rgb(0, 0, 0);">Github</button>`)
+				$btn.on("click", () => {
+					window.location.href = "https://github.com/optimize-2/extend-luogu"
+				})
+				.mouseenter(() => {$btn.css("background-color", "rgba(0, 0, 0, 0.9)")})
+				.mouseleave(() => {$btn.css("background-color", "rgb(0, 0, 0)")})
+				return $btn
+			})()
+		).append($(`<text> </text>`)).append(
+			(() => {
+				const $btn = $(`<button data-v-370e72e2="" data-v-61c90fba="" type="button" class="lfe-form-sz-middle" data-v-22efe7ee="" style="font-family: Microsoft YaHei;border-color: rgb(82, 196, 26); background-color: rgb(82, 196, 26);">FastGit</button>`)
+				$btn.on("click", () => {
+					window.location.href = "https://hub.fastgit.org/optimize-2/extend-luogu/raw/main/extend-luogu.user.js"
+				})
+				.mouseenter(() => {$btn.css("background-color", "rgba(82, 196, 26, 0.9)")})
+				.mouseleave(() => {$btn.css("background-color", "rgb(82, 196, 26)")})
+				return $btn
+			})()
+		)
+		.appendTo($('#ex-settings-update-versions'))
+		/*	uindow.addEventListener("message", e => {
+			log("Listening message:", e.data)
+			if (e.data[0] !== "update") return
+			e.data.shift()
+
+			const
+				latest = e.data[0],
+				version = GM_info.script.version,
+				op = version_cmp(version, latest)
+			$("#settings-newest-version").append($(`<text>${ latest }</text>`))
+		})	*/
+		
 	}
 
 
