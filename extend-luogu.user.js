@@ -503,7 +503,7 @@ mod.reg_chore("update", "脚本升级", "1D", "@/*", () => {
 		if(op === ">>") {
 			$(`#newest-version-display`).css("color", "#66ccff")
 		}
-		
+
     })
 })
 
@@ -1158,7 +1158,6 @@ mod.reg("keyboard-and-cli", "键盘操作与命令行", "@/*", () => {
 
 
 mod.reg("copy-code-block", "代码块功能优化", "@/*", () => {
-	log("copy-code!", GM_getValue('code-fonts-val', ''))
 	const language_show = GM_getValue("copy-code-block-language", true)
 	const func_code = () => {
 		const $cb = $("pre:has(> code)")
@@ -1210,7 +1209,7 @@ mod.reg("copy-code-block", "代码块功能优化", "@/*", () => {
 			if (!$cb.children('code').hasClass('hljs')) {
 				$cb.children('code').addClass('hljs').css('background', 'white')//style="background: white"
 			}
-			if (GM_getValue('code-fonts-val', '') != '' && GM_getValue('code-fonts-val', '')) {
+			if (GM_getValue('code-fonts-val', '') != '') {
 				$cb.children('code').css('font-family', GM_getValue('code-fonts-val', ''))
 			}
 		})
@@ -1228,7 +1227,7 @@ mod.reg("copy-code-block", "代码块功能优化", "@/*", () => {
 					$('.lfe-h3').text($('.lfe-h3').text() + '-' + $($(".value.lfe-caption")[0]).text()).attr("exlg-language-show", '')
 				}
 				const $cb = $("pre:has(> code)")
-				if (GM_getValue('code-fonts-val', '') != '' && GM_getValue('code-fonts-val', '')) {
+				if (GM_getValue('code-fonts-val', '') != '') {
 					$cb.children('code').css('font-family', GM_getValue('code-fonts-val', ''))
 				}
 				$cb.children('code').addClass('hljs').css('background', 'white')
@@ -1396,14 +1395,14 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
 			})
 		return $fte
 	}
-	
+
 	const href_list = ['information', 'preference', 'security', 'extension', 'extension-admin']
 	if (window.location.href == "https://www.luogu.com.cn/user/setting" || window.location.href.indexOf("https://www.luogu.com.cn/user/setting#") == 0) {
 		if (window.location.href == "https://www.luogu.com.cn/user/setting" || href_list.indexOf(window.location.href.substr(38)) == -1) {
             //log('23333')
 			//window.location.href = "https://www.luogu.com.cn/user/setting#information"
 		}
-		
+
 		const $lg_entry = $('.items').children('li')
 		const $lg_form_layout = $('.padding-default')
 	    $lg_entry.hide()
@@ -1434,7 +1433,7 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
 		<p data-v-9a2394ca="" data-v-22efe7ee="" class="lfe-caption">一些奇怪的东西。</p>
 	</div></div>
 </div>`).appendTo($ex_form_layout)
-		
+
 
 		//end.
 
@@ -1448,14 +1447,14 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
 		<p data-v-9a2394ca="" data-v-22efe7ee="" class="lfe-caption">请暂时前往exlg的github反馈issues。</p>
 	</div></div>
 </div>`).appendTo($ex_admin_form_layout)
-		
-		
+
+
 		$(
 `<div data-v-22efe7ee="" class="row">
 	<span data-v-22efe7ee="">
 		<span data-v-9a2394ca="" data-v-22efe7ee="">版本&更新</span>
 	</span><div data-v-22efe7ee=""><div data-v-9a2394ca="" data-v-22efe7ee="" id="ex-settings-update-versions">
-		
+
 	</div></div>
 </div>`).appendTo($ex_admin_form_layout)
 		$(
@@ -1475,9 +1474,9 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
 	</div></div>
 </div>`).appendTo($ex_admin_form_layout)
 		//end.
-		
 
-		
+
+
 		//这里是顶层的栏目设置
 		//总共5个~
         const $ex_entry_info = $(`<li data-v-7092f3a4=""><span data-v-7092f3a4="" class="entry">个人信息</span><!----></li>`).appendTo($('.items'))
@@ -1545,7 +1544,7 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
 			$ex_admin_form_layout.show()
 			window.location.href = "https://www.luogu.com.cn/user/setting#extension-admin"
 		})
-		
+
 		//module设置
 		mod._.forEach(m => {
 			if (!unclosable_list.includes(m.name) && !["user-css-edit", "update"].includes(m.name)) {
@@ -1583,9 +1582,9 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
 					})()
 			)
 		).appendTo($('#ex-settings-module-settings'))
-		
+
 		$(`<div><h4>讨论保存</h4></div>`).append($get_button_of_sth("discuss-auto-save", "讨论自动保存", true)).appendTo($("#ex-settings-module-settings"))
-		
+
 		$(`<div><h4>自定义css</h4></div>`).append(
 			$(`<div class="am-form-group am-form"></div>`).append(
 				$(`<textarea rows="3" id="custom-css-input"` + ((GM_getValue('code-fonts-val', '') != '') ? (`style="font-family: ` + GM_getValue('code-fonts-val', '') + `"`) : (``)) +`></textarea>`).val(GM_getValue("user-css"))
@@ -1610,7 +1609,7 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
 			)
 		)
 		.appendTo($('#ex-settings-module-settings'))
-		
+
 		//数据&调试
 		$(`<div></div>`).append($get_button_of_sth("exlg-debug-mode", "debug_mode", false))
 			.append($(`<text> </text>`))
@@ -1631,7 +1630,7 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
 			})()
 			)
 			.appendTo($("#ex-settings-data-debug"))
-			
+
 		$(`<div></div>`).append($(`<p></p>`).append(
 			(() => {
 				const $btn = $(`<button data-v-370e72e2="" data-v-61c90fba="" type="button" class="lfe-form-sz-middle" data-v-22efe7ee="" style="border-color: rgb(231, 76, 60); background-color: rgb(231, 76, 60);">清除exlg数据</button>`)
@@ -1660,7 +1659,7 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
 				return $btn
 			})()
 		)).appendTo($('#ex-settings-data-debug'))
-		
+
 		$(`<p data-v-9a2394ca="" data-v-22efe7ee="" class="lfe-caption">当前版本为：${ GM_info.script.version }</p>`)
 		.append($(`<text> </text>`))
 		.append(
@@ -1675,7 +1674,7 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
 				return $btn
 			})()
 		).appendTo($('#ex-settings-update-versions'))
-		
+
 		$(`<p data-v-9a2394ca="" data-v-22efe7ee="" class="lfe-caption">最新版本为：<text id="newest-version-display">${ GM_info.script.version }</text></p>`)
 		.append($(`<text> </text>`))
 		.append(
@@ -1741,7 +1740,7 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
 				op = version_cmp(version, latest)
 			$("#settings-newest-version").append($(`<text>${ latest }</text>`))
 		})	*/
-		
+
 	}
 
 
@@ -1784,7 +1783,7 @@ mod.reg("discuss-save", "讨论保存 - 原作者__OwO__", "@/*", () => {
 	if(GM_getValue("discuss-auto-save", true)) {
 		save_func()
 	}
-    
+
 })
 
 mod.reg("update-log", "更新日志显示", "@/*", () => {
