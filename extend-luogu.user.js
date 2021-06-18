@@ -660,6 +660,7 @@ mod.reg("benben", "全网犇犇", "@/", () => {
 
         if (e.data[0] !== "benben") return
         e.data.shift()
+		if (!$("#exlg-benben-selector").hasClass("am-active")) return //若不是全网犇犇就不添加
         e.data.forEach(m =>
             $(`
 <li class="am-comment am-comment-primary feed-li">
@@ -1164,35 +1165,26 @@ mod.reg("copy-code-block", "代码块功能优化", "@/*", () => {
 		const $cb = $("pre:has(> code)")
 		if ($cb.length) log(`Scanning code block:`, $cb.length)
 		$cb.each((i, e, $e = $(e)) => {
+			if ((typeof($($cb[i]).attr("exlg-copy-code-block")) != "undefined")) return
+			else $($cb[i]).attr("exlg-copy-code-block", '')
 			const btn = $(`<div class="exlg-copy">复制</div>`)
 			const language_list = ['c', 'cpp', 'pascal', 'python', 'java', 'javascript', 'php', 'latex']
 			let language = ""
 			if (language_show) {
-				if ($e.find("code").attr("data-rendered-lang")) {
-					language = $e.find("code").attr("data-rendered-lang").toString()
-				}
+				if ($e.find("code").attr("data-rendered-lang")) language = $e.find("code").attr("data-rendered-lang").toString()
 				if ($e.find("code").attr("class")) {
 					const str = $e.find("code").attr("class").toString()
-					if (str.indexOf("hljs") != -1) {
-						language = str.substr(9, str.length - 14)
-					}
-					else {
-						language = str.substr(9, str.length - 9)
-					}
+					if (str.indexOf("hljs") != -1) language = str.substr(9, str.length - 14)
+					else language = str.substr(9, str.length - 9)
 				}
-				if (language.indexOf('ult language-') == 0) {
-					language = language.substr(13)
-				}
-				if (language_list.indexOf(language) == -1) {
-					language = ""
-				}
+				if (language.indexOf('ult language-') == 0) language = language.substr(13)
+				if (language_list.indexOf(language) == -1) language = ""
 				log(language_list.indexOf(language))
-				if (language == "cpp") {
-					language = "c++"
-				}
+				if (language == "cpp") language = "c++"
 				if (language != "") language = "-" + language
 			}
 			log("Language:" + language)
+			log($cb[i], e, $e)
 			const $$cb = $($cb[i]).parent()
 			$cb[i].before($(`<p></p>`).get(0))
 			$cb[i].before(btn.on("click", () => {
@@ -1207,12 +1199,8 @@ mod.reg("copy-code-block", "代码块功能优化", "@/*", () => {
 			}).get(0))
 			$cb[i].before($(`<span style="font-family: Microsoft YaHei;font-size:18px;font-weight:bold">源代码${language}</span>`).get(0))
 			$cb[i].before($(`<p></p>`).get(0))
-			if (!$cb.children('code').hasClass('hljs')) {
-				$cb.children('code').addClass('hljs').css('background', 'white')//style="background: white"
-			}
-			if (GM_getValue('code-fonts-val', '') != '') {
-				$cb.children('code').css('font-family', GM_getValue('code-fonts-val', ''))
-			}
+			if (!$cb.children('code').hasClass('hljs')) $cb.children('code').addClass('hljs').css('background', 'white')
+			if (GM_getValue('code-fonts-val', '') != '') $cb.children('code').css('font-family', GM_getValue('code-fonts-val', ''))
 		})
 	}
 	func_code()
@@ -1220,12 +1208,17 @@ mod.reg("copy-code-block", "代码块功能优化", "@/*", () => {
 		$('.feed-selector').on("click", () => {
 			setTimeout(func_code, 300)
 		}) // lack of hook
+		$('#feed-more').on("click", () => {
+			setTimeout(func_code, 300)
+		}) // lack of hook
 	}
 	if (window.location.href.indexOf("https://www.luogu.com.cn/record/") == 0) {
 		$($('.entry')[1]).on("click", () => {
 			setTimeout(() => {
-				if (language_show && (typeof($('.lfe-h3').attr("exlg-language-show"))=="undefined") ) {
-					$('.lfe-h3').text($('.lfe-h3').text() + '-' + $($(".value.lfe-caption")[0]).text()).attr("exlg-language-show", '')
+				if (language_show && (typeof($('.lfe-h3').attr("exlg-language-show")) == "undefined")) {
+					let language = $($(".value.lfe-caption")[0]).text().toLowerCase()
+					log("Language:" + language)
+					$('.lfe-h3').text($('.lfe-h3').text() + '-' + ((language.substr(-3) == " o2") ? (language.slice(0, -3)) : (language))).attr("exlg-language-show", '')
 				}
 				const $cb = $("pre:has(> code)")
 				if (GM_getValue('code-fonts-val', '') != '') {
@@ -1281,8 +1274,7 @@ mod.reg_board("search-user", "查找用户名", $board => {
                 $search_user.prop("disabled", false)
                 lg_alert("无法找到指定用户")
             }
-            else
-                location.href = "/user/" + res.users[0].uid
+            else location.href = "/user/" + res.users[0].uid
         })
     }
     const $search_user = $("#search-user").on("click", func)
