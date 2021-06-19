@@ -1,16 +1,16 @@
 // ==UserScript==
 // @name           extend-luogu
 // @namespace      http://tampermonkey.net/
-// @version        5.9.2
+// @version        5.9.3
 // @description    Make Luogu more powerful.
-// @author         optimize_2 ForkKILLET minstdfx haraki swift-zym qinyihao oimaster
+// @author         optimize_2 ForkKILLET minstdfx haraki swift-zym qinyihao oimaster Maxmilite
 // @match          https://*.luogu.com.cn/*
 // @match          https://*.luogu.org/*
 // @match          https://service-ig5px5gh-1305163805.sh.apigw.tencentcs.com/release/APIGWHtmlDemo-1615602121
 // @match          https://service-psscsax9-1305163805.sh.apigw.tencentcs.com/release/exlg-version
 // @match          https://www.bilibili.com/robots.txt?*
 // @match          http://localhost/*
-// @require        https://cdn.luogu.com.cn/js/jquery-2.1.1.min.js
+// @require        https://code.jquery.com/jquery-2.1.1.min.js
 // @require        https://cdn.bootcdn.net/ajax/libs/js-xss/0.3.3/xss.min.js
 // @require        https://cdn.bootcdn.net/ajax/libs/marked/2.0.1/marked.min.js
 // @grant          GM_addStyle
@@ -448,10 +448,13 @@ mod.reg("emoticon", "表情输入", [ "@/discuss/lists", "@/discuss/show/*" ], (
     $nl.after($fold)
 
     $txt.on("input", e => {
-        if (e.originalEvent.data === "/")
+        // 添加对 LuoguEmojiSender 的兼容
+        if (document.getElementById("replaceEmoji") == null)  {
+            if (e.originalEvent.data === "/")
             mdp.content = mdp.content.replace(/\/(.{1,5})\//g, (_, emo_txt) =>
                 `![${emo_txt}](` + emo_url(emo.find(m => m.includes(emo_txt))) + `)`
             )
+        }
     })
 }, `
 .mp-editor-ground.exlg-ext {
