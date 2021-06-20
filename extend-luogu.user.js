@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           extend-luogu
 // @namespace      http://tampermonkey.net/
-// @version        5.10.0
+// @version        5.10.1
 // @description    Make Luogu more powerful.
 // @author         optimize_2 ForkKILLET minstdfx haraki swift-zym qinyihao oimaster Maxmilite
 // @match          https://*.luogu.com.cn/*
@@ -31,9 +31,7 @@ const html_circleswitch_on = `<svg data-v-2dc28d52="" aria-hidden="true" focusab
 const html_circleswitch_off = `<svg data-v-2dc28d52="" aria-hidden="true" focusable="false" data-prefix="far" data-icon="circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="fa-input svg-inline--fa fa-circle fa-w-16"><path data-v-2dc28d52="" fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 448c-110.5 0-200-89.5-200-200S145.5 56 256 56s200 89.5 200 200-89.5 200-200 200z" class=""></path></svg>`
 
 const show_exlg_updlog = () => uindow.show_alert(`extend-luogu Ver. ${ GM_info.script.version } 更新日志`, `
-1. 重构了表情功能
-2. 修改了设置界面
-3. 增加了双击题号跳题功能
+1. 修复了表情功能
 `)
 //yjp flaged
 
@@ -394,7 +392,6 @@ mod.reg("emoticon", "表情输入", [ "@/discuss/lists", "@/discuss/show/*" ], (
         [ "62250", [ "fad", "fd" ] ],
         [ "69020", [ "youl", "yl" ] ]
     ]
-    const emo_url = id => `https://cdn.luogu.com.cn/upload/pic/${id}.png`
     */
     const emo = [
         "qq",
@@ -423,9 +420,10 @@ mod.reg("emoticon", "表情输入", [ "@/discuss/lists", "@/discuss/show/*" ], (
         "tyt",
     ]
     const emo_markdown = (name) => {
-        if (emo.includes(name)) return `![/${name}](https://xn--9zr.tk/${name})`
+        if (emo.includes(name)) return `![${name}](https://xn--9zr.tk/${name})`
         else return name
     }
+    const emo_url = name => `https://xn--9zr.tk/${name}`
     const $menu = $(".mp-editor-menu"),
         $txt = $(".CodeMirror-wrap textarea"),
         $nl = $("<br />").appendTo($menu),
@@ -436,7 +434,7 @@ mod.reg("emoticon", "表情输入", [ "@/discuss/lists", "@/discuss/show/*" ], (
         $(`<li class="exlg-emo"><img src="${url}" /></li>`)
             .on("click", () => $txt
                 .trigger("focus")
-                .val(`![${ m[1][0] }](${url})`)
+                .val(emo_markdown(m))
                 .trigger("input")
             )
             .appendTo($menu)
