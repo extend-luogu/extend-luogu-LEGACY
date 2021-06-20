@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           extend-luogu
 // @namespace      http://tampermonkey.net/
-// @version        5.9.3
+// @version        5.10.0
 // @description    Make Luogu more powerful.
 // @author         optimize_2 ForkKILLET minstdfx haraki swift-zym qinyihao oimaster Maxmilite
 // @match          https://*.luogu.com.cn/*
@@ -31,7 +31,9 @@ const html_circleswitch_on = `<svg data-v-2dc28d52="" aria-hidden="true" focusab
 const html_circleswitch_off = `<svg data-v-2dc28d52="" aria-hidden="true" focusable="false" data-prefix="far" data-icon="circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="fa-input svg-inline--fa fa-circle fa-w-16"><path data-v-2dc28d52="" fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 448c-110.5 0-200-89.5-200-200S145.5 56 256 56s200 89.5 200 200-89.5 200-200 200z" class=""></path></svg>`
 
 const show_exlg_updlog = () => uindow.show_alert(`extend-luogu Ver. ${ GM_info.script.version } 更新日志`, `
-先测试一下大家看不看得到~
+1. 重构了表情功能
+2. 修改了设置界面
+3. 增加了双击题号跳题功能
 `)
 //yjp flaged
 
@@ -420,7 +422,10 @@ mod.reg("emoticon", "表情输入", [ "@/discuss/lists", "@/discuss/show/*" ], (
         "dx",
         "tyt",
     ]
-    const emo_url = name => `https://xn--9zr.tk/${name}`
+    const emo_markdown = (name) => {
+        if (emo.includes(name)) return `![/${name}](https://xn--9zr.tk/${name})`
+        else return name
+    }
     const $menu = $(".mp-editor-menu"),
         $txt = $(".CodeMirror-wrap textarea"),
         $nl = $("<br />").appendTo($menu),
@@ -451,9 +456,7 @@ mod.reg("emoticon", "表情输入", [ "@/discuss/lists", "@/discuss/show/*" ], (
         // 添加对 LuoguEmojiSender 的兼容
         if (document.getElementById("replaceEmoji") == null)  {
             if (e.originalEvent.data === "/")
-            mdp.content = mdp.content.replace(/\/(.{1,5})\//g, (_, emo_txt) =>
-                `![${emo_txt}](` + emo_url(emo.find(m => m.includes(emo_txt))) + `)`
-            )
+                mdp.content = mdp.content.replace(/\/(.{1,5})\//g, (_, emo_txt) => emo_markdown(emo_txt) )
         }
     })
 }, `
@@ -1705,16 +1708,6 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
 			})()
 		).append($(`<text> </text>`)).append(
 			(() => {
-				const $btn = $(`<button data-v-370e72e2="" data-v-61c90fba="" type="button" class="lfe-form-sz-middle" data-v-22efe7ee="" style="font-family: Microsoft YaHei;border-color: rgb(0, 0, 0); background-color: rgb(0, 0, 0);">Github</button>`)
-				$btn.on("click", () => {
-					window.location.href = "https://github.com/optimize-2/extend-luogu"
-				})
-				.mouseenter(() => {$btn.css("background-color", "rgba(0, 0, 0, 0.9)")})
-				.mouseleave(() => {$btn.css("background-color", "rgb(0, 0, 0)")})
-				return $btn
-			})()
-		).append($(`<text> </text>`)).append(
-			(() => {
 				const $btn = $(`<button data-v-370e72e2="" data-v-61c90fba="" type="button" class="lfe-form-sz-middle" data-v-22efe7ee="" style="font-family: Microsoft YaHei;border-color: rgb(82, 196, 26); background-color: rgb(82, 196, 26);">FastGit</button>`)
 				$btn.on("click", () => {
 					window.location.href = "https://hub.fastgit.org/optimize-2/extend-luogu/raw/main/extend-luogu.user.js"
@@ -1788,11 +1781,37 @@ mod.reg("update-log", "更新日志显示", "@/*", () => {
 		GM_setValue("exlg-last-used-version", GM_info.script.version)
 	}
 	else if (GM_getValue("exlg-last-used-version") != GM_info.script.version) {
-		console.log("able to show but not at mainpage")
+		log("It's able to show the update log but not at mainpage")
 	}
 	else {
-		console.log("newest!!!")
+		log("The version is the lateset.")
 	}
+})
+
+mod.reg("dbc-jump", "双击题号跳题","@/*", () => {
+    const judge_problem = (text) => {
+        if (text.match(/AT[0-9]{1,4}/) == text) return true
+        if (text.match(/CF[0-9]{1,4}[A-Z][0-9]{0,1}/) == text) return true
+        if (text.match(/SP[0-9]{1,5}/) == text) return true
+        if (text.match(/P[0-9]{4}/) == text) return true
+        if (text.match(/UVA[0-9]{1,5}/) == text) return true
+        if (text.match(/U[0-9]{1,6}/) == text) return true
+        if (text.match(/T[0-9]{1,6}/) == text) return true
+        return false
+    }
+    const jump = () => {
+        const selection = window.getSelection()
+        const selected = selection.toString().replace(' ', '').toUpperCase()
+        var url
+
+        if (event.ctrlKey) {
+            const myBlog = document.querySelectorAll('.ops>a[href*=blog]')[0]
+            url = myBlog.href + 'solution-';
+        } else url = 'https://www.luogu.com.cn/problem/'
+
+        if (judge_problem(selected)) window.open(url + selected)
+    }
+    document.ondblclick = jump;
 })
 
 $(() => mod.execute())
@@ -1800,6 +1819,6 @@ log("Lauching")
 log(GM_listValues())
 
 Object.assign(uindow, {
-    exlg: { mod, marked, log, error },
+    exlg: { mod, log, error },
     $$: $, xss, version_cmp
 })
