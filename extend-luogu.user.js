@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           extend-luogu
 // @namespace      http://tampermonkey.net/
-// @version        5.10.4
+// @version        6.0.0
 // @description    Make Luogu more powerful.
 // @author         optimize_2 ForkKILLET minstdfx haraki swift-zym qinyihao oimaster Maxmilite
 // @match          https://*.luogu.com.cn/*
@@ -31,7 +31,7 @@ const html_circleswitch_on = `<svg data-v-2dc28d52="" aria-hidden="true" focusab
 const html_circleswitch_off = `<svg data-v-2dc28d52="" aria-hidden="true" focusable="false" data-prefix="far" data-icon="circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="fa-input svg-inline--fa fa-circle fa-w-16"><path data-v-2dc28d52="" fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 448c-110.5 0-200-89.5-200-200S145.5 56 256 56s200 89.5 200 200-89.5 200-200 200z" class=""></path></svg>`
 
 const show_exlg_updlog = () => uindow.show_alert(`extend-luogu Ver. ${ GM_info.script.version } 更新日志`, `
-1. 修复了表情功能
+1. 钩子被我做完了不可能再有bug了再有我吃*
 `)
 //yjp flaged
 
@@ -1190,11 +1190,10 @@ mod.reg("keyboard-and-cli", "键盘操作与命令行", "@/*", () => {
 mod.reg("copy-code-block", "代码块功能优化", "@/*", () => {
 	const language_show = GM_getValue("copy-code-block-language", true)
 	const func_code = () => {
-		const $cb = $("pre:has(> code)")
+		const $cb = $("pre:has(> code):not([exlg-copy-code-block=''])")
 		if ($cb.length) log(`Scanning code block:`, $cb.length)
 		$cb.each((i, e, $e = $(e)) => {
-			if ((typeof($($cb[i]).attr("exlg-copy-code-block")) != "undefined")) return
-			else $($cb[i]).attr("exlg-copy-code-block", '')
+			$($cb[i]).attr("exlg-copy-code-block", '')
 			const btn = $(`<div class="exlg-copy">复制</div>`)
 			const language_list = ['c', 'cpp', 'pascal', 'python', 'java', 'javascript', 'php', 'latex']
 			let language = ""
@@ -1239,7 +1238,7 @@ mod.reg("copy-code-block", "代码块功能优化", "@/*", () => {
 		$('#feed-more').on("click", () => {
 			setTimeout(func_code, 300)
 		}) // lack of hook
-	}
+	}//以防万一
 	if (window.location.href.indexOf("https://www.luogu.com.cn/record/") == 0) {
 		$($('.entry')[1]).on("click", () => {
 			setTimeout(() => {
@@ -1862,8 +1861,42 @@ mod.reg("dbc-jump", "双击题号跳题","@/*", () => {
     }
     document.ondblclick = jump;
 })
+let dash_delay = false, code_delay = false
+let bind_lock = false
+$('body').bind("DOMSubtreeModified", _ => {
+	setTimeout(() => {
+		if (!code_delay && !$("pre:has(> code):not([exlg-copy-code-block=''])").length) {
+			code_delay = true
+			setTimeout(() => {
+				mod.execute("copy-code-block")
+				setTimeout(() => {code_delay = false}, 300)
+			}, 300)
+		}
+	}, 0)//奇怪的进程
+	if (!$("#exlg-dash").length && !dash_delay && !bind_lock) {
+		bind_lock = true
+		dash_delay = true//我还不信了，双保险
 
-$(() => mod.execute())
+		setTimeout(() => {
+			mod.execute()
+			dash_delay = false
+			setTimeout(() => {bind_lock = false}, 300)
+		}, 300)
+	}
+})//解决每次奇怪的改变
+
+(_ => {
+	if (!$("#exlg-dash").length && !dash_delay) {
+		bind_lock = true
+		dash_delay = true
+
+		setTimeout(() => {
+			mod.execute()
+			dash_delay = false
+			setTimeout(() => {bind_lock = false}, 300)
+		}, 300)
+	}
+})('fuck_you')//解决第一次
 log("Lauching")
 log(GM_listValues())
 
