@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           extend-luogu
 // @namespace      http://tampermonkey.net/
-// @version        6.0.0
+// @version        6.0.1
 // @description    Make Luogu more powerful.
 // @author         optimize_2 ForkKILLET minstdfx haraki swift-zym qinyihao oimaster Maxmilite
 // @match          https://*.luogu.com.cn/*
@@ -31,9 +31,12 @@ const html_circleswitch_on = `<svg data-v-2dc28d52="" aria-hidden="true" focusab
 const html_circleswitch_off = `<svg data-v-2dc28d52="" aria-hidden="true" focusable="false" data-prefix="far" data-icon="circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="fa-input svg-inline--fa fa-circle fa-w-16"><path data-v-2dc28d52="" fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 448c-110.5 0-200-89.5-200-200S145.5 56 256 56s200 89.5 200 200-89.5 200-200 200z" class=""></path></svg>`
 
 const show_exlg_updlog = () => uindow.show_alert(`extend-luogu Ver. ${ GM_info.script.version } 更新日志`, `
-1. 钩子被我做完了不可能再有bug了再有我吃*
+1. 钩子被我做完了不可能再有bug了再有我吃*                                 
+2.(追加)修复了code的hook写错的bug和exlg设置处前进后退的鬼畜bug
 `)
 //yjp flaged
+let dash_delay = false, code_delay = false, bind_lock = false, settings_lock = false
+//钩子用的
 
 const uindow = unsafeWindow
 const $ = jQuery
@@ -1526,44 +1529,54 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
 			$ex_admin_form_layout.show()
 		}
 		$ex_entry[0].on('click', () => {
+			settings_lock = true
 			$lg_entry[0].click()
 			$('.entry').removeClass('selected')
 			$ex_entry[0].children().addClass('selected')
 			$lg_form_layout.show()
 			$ex_form_layout.hide()
 			$ex_admin_form_layout.hide()
+			setTimeout(() => settings_lock = false, 300)
 		})
 		$ex_entry[1].on('click', () => {
+			settings_lock = true
 			$lg_entry[1].click()
 			$('.entry').removeClass('selected')
 			$ex_entry[1].children().addClass('selected')
 			$lg_form_layout.show()
 			$ex_form_layout.hide()
 			$ex_admin_form_layout.hide()
+			setTimeout(() => settings_lock = false, 300)
 		})
 		$ex_entry[2].on('click', () => {
+			settings_lock = true
 			$lg_entry[2].click()
 			$('.entry').removeClass('selected')
 			$ex_entry[2].children().addClass('selected')
 			$lg_form_layout.show()
 			$ex_form_layout.hide()
 			$ex_admin_form_layout.hide()
+			setTimeout(() => settings_lock = false, 300)
 		})
 		$ex_entry[3].on('click', () => {
+			settings_lock = true
 			$('.entry').removeClass('selected')
 			$ex_entry[3].children().addClass('selected')
 			$lg_form_layout.hide()
 			$ex_form_layout.show()
 			$ex_admin_form_layout.hide()
 			window.location.href = "https://www.luogu.com.cn/user/setting#extension"
+			setTimeout(() => settings_lock = false, 300)
 		})
 		$ex_entry[4].on('click', () => {
+			settings_lock = true
 			$('.entry').removeClass('selected')
 			$ex_entry[4].children().addClass('selected')
 			$lg_form_layout.hide()
 			$ex_form_layout.hide()
 			$ex_admin_form_layout.show()
 			window.location.href = "https://www.luogu.com.cn/user/setting#extension-admin"
+			setTimeout(() => settings_lock = false, 300)
 		})
 
 		//module设置
@@ -1862,18 +1875,18 @@ mod.reg("dbc-jump", "双击题号跳题","@/*", () => {
     }
     document.ondblclick = jump;
 })
-let dash_delay = false, code_delay = false
-let bind_lock = false
 $('body').bind("DOMSubtreeModified", _ => {
 	setTimeout(() => {
-		if (!code_delay && !$("pre:has(> code):not([exlg-copy-code-block=''])").length) {
+		if (!code_delay && $("pre:has(> code):not([exlg-copy-code-block=''])").length) {
 			code_delay = true
+			console.log($("pre:has(> code):not([exlg-copy-code-block=''])")[0])
 			setTimeout(() => {
 				mod.execute("copy-code-block")
 				setTimeout(() => {code_delay = false}, 300)
 			}, 300)
 		}
-	}, 0)//奇怪的进程
+	}, 0)//奇怪的进程1
+	//*
 	if (!$("#exlg-dash").length && !dash_delay && !bind_lock) {
 		bind_lock = true
 		dash_delay = true//我还不信了，双保险
@@ -1885,7 +1898,27 @@ $('body').bind("DOMSubtreeModified", _ => {
 		}, 300)
 	}
 })//解决每次奇怪的改变
-
+window.onhashchange = _ => {
+	if (window.location.href != "https://www.luogu.com.cn/user/setting" && window.location.href.indexOf("https://www.luogu.com.cn/user/setting#") != 0) return
+	if (settings_lock) return
+	settings_lock = true
+	const buttons = $(`li[data-v-7092f3a4=""]:has(> span[data-v-7092f3a4=""].entry:not(:hidden))`)
+	if (window.location.href.substr(38) == "extension") {
+		log("F extension settings~")
+		$(buttons[3]).click()
+	}
+	else if (window.location.href.substr(38) == "extension-admin") {
+		log("F hidden extension settings~")
+		$(buttons[4]).click()
+	}
+	else {
+		log("F default settings~")
+		if (window.location.href.substr(38) == "security") $(buttons[2]).click()
+		else if (window.location.href.substr(38) == "preference") $(buttons[1]).click()
+		else $(buttons[0]).click()
+	}
+	settings_lock = false
+}
 (_ => {
 	if (!$("#exlg-dash").length && !dash_delay) {
 		bind_lock = true
