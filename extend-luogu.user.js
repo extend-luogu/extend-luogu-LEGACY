@@ -708,9 +708,10 @@ mod.reg("benben", "全网犇犇", "@/", () => {
 
 mod.reg_board("rand-problem-ex", "随机跳题ex", $board => {
     $("[name='gotorandom']").text("随机")
-    const $start_rand = $(`<button class="am-btn am-btn-primary am-btn-sm" name="gotorandomex" id="gtrdex">随机ex</button>`)
-    $start_rand.appendTo($("[name='gotorandom']").parent())
-    $(`<div id="exlg-dash-0" class = "exlg-rand-settings">...</div><span id="exlg-dash-0-window" class="exlg-window"><p><ul id="exlg-rand-diffs"><h2>随机跳题ex</h2></ul></p></span>`).appendTo($("[name='gotorandom']").parent())
+    const $start_rand = $(`<button class="am-btn am-btn-success am-btn-sm" name="gotorandomex" id="gtrdex">随机ex</button>`).appendTo($("[name='gotorandom']").parent())
+	//$(".lg-index-stat>h2").after($(`<div><h2>问题跳转</h2><div id="exlg-dash-0" class="exlg-rand-settings">...</div></div>`)).remove()
+	$(".lg-index-stat>h2").after($(`<h2>问题跳转 <div id="exlg-dash-0" class="exlg-rand-settings">ex设置</div></h2>`)).remove()
+    $(`<span id="exlg-dash-0-window" class="exlg-window"><p><ul id="exlg-rand-diffs"><h2>随机跳题ex <div class="exlg-rand-settings exlg-save-rdpb">保存并关闭</div></h2></h2></ul></p></span>`).appendTo($("[name='gotorandom']").parent())
 	//$("[name='gotorandom']").parent().parent().children('h2').html($(`<h2>问题跳转</h2><div id="exlg-dash-0" class = "exlg-rand-settings">...</div><span id="exlg-dash-0-window" class="exlg-window"><p><ul id="exlg-rand-diffs"><h2>随机跳题ex</h2></ul></p></span>`))
     const iLoveMinecraft = [0, 1, 2, 3, 4, 5, 6, 7]
     const iLoveTouhou = [0, 1, 2, 3, 4]
@@ -764,8 +765,8 @@ mod.reg_board("rand-problem-ex", "随机跳题ex", $board => {
             })
     })
     $(`<br>`).appendTo($diffs)
-    const save_rdpb = $(`<button class="am-btn am-btn-primary am-btn-sm" name="saverandom">保存</button>`)
-    save_rdpb.on("click", _ => {
+    const save_rdpb = $(`<button class="am-btn am-btn-primary am-btn-sm exlg-save-rdpb" name="saverandom">保存</button>`)
+    $('.exlg-save-rdpb').on("click", _ => {
         GM_setValue("mod-rand-difficulty", difficulty_select)
         GM_setValue("mod-rand-source", source_select)
         $("#exlg-dash-0-window").toggle()
@@ -814,7 +815,32 @@ mod.reg_board("rand-problem-ex", "随机跳题ex", $board => {
         )
     }
     $("#gtrdex").on("click", HREF_NEXT)
-
+	$(".am-form-field[name='toproblem']").after($(`<input type="text" class="am-form-field" placeholder="例：P1001，可跳至A+B" name="toproblem">`)).remove()
+	$(".am-btn.am-btn-danger.am-btn-sm[name='goto']").after($(`<button class="am-btn am-btn-danger am-btn-sm" name="goto">跳转</button>`)).remove()
+	const judge_problem = (text) => {
+        if (text.match(/AT[0-9]{1,4}/i) == text) return true
+        if (text.match(/CF[0-9]{1,4}[A-Z][0-9]{0,1}/i) == text) return true
+        if (text.match(/SP[0-9]{1,5}/i) == text) return true
+        if (text.match(/P[0-9]{4}/i) == text) return true
+        if (text.match(/UVA[0-9]{1,5}/i) == text) return true
+        if (text.match(/U[0-9]{1,6}/i) == text) return true
+        if (text.match(/T[0-9]{1,6}/i) == text) return true
+        return false
+    }
+	const $func_jump_problem = (str) => {
+		log("problem input is:", str)
+		if (judge_problem(str)) str = str.toUpperCase()
+		if (str == "" || typeof(str) == "undefined") uindow.show_alert("提示", "请输入题号")
+		else location.href = "https://www.luogu.com.cn/problemnew/show/" + str
+	}
+	const $input_problem = $(".am-form-field[name='toproblem']").on("keydown", e => {
+		if (e.keyCode == 13) {
+			$func_jump_problem($input_problem.val())
+		}
+	})
+	$(".am-btn.am-btn-danger.am-btn-sm[name='goto']").on("click", () => {
+		$func_jump_problem($input_problem.val())
+	})
 
     $("#rand-problem-2").on("click", () => {
         const id = $("[name=rand-problem-2]").val()
@@ -843,7 +869,6 @@ mod.reg_board("rand-problem-ex", "随机跳题ex", $board => {
     color: cornflowerblue;
     border-radius: 6px;
     font-size:12px;
-    float:right
 }
 .exlg-difficulties {
     position: relative;
@@ -1716,6 +1741,33 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
 			})()
 		)
 		.appendTo($('#ex-settings-update-versions'))
+		$(`<p data-v-9a2394ca="" data-v-22efe7ee="" class="lfe-caption">项目有关</p>`).append(`<text> </text>`)
+		.append(
+			$(`<a href="https://github.com/optimize-2/extend-luogu"></a>`).append(
+				(() => {
+					const $btn = $(`<button data-v-370e72e2="" data-v-61c90fba="" type="button" class="lfe-form-sz-middle" data-v-22efe7ee="" style="font-family: Microsoft YaHei;border-color: rgb(0, 0, 0); background-color: rgb(0, 0, 0);">Github</button>`)
+					$btn.on("click", () => {
+
+					})
+					.mouseenter(() => {$btn.css("background-color", "rgba(0, 0, 0, 0.8)")})
+					.mouseleave(() => {$btn.css("background-color", "rgb(0, 0, 0)")})
+					return $btn
+				})()
+			)
+		).append(`<text> </text>`)
+		.append(
+			$(`<a href="https://www.luogu.com.cn/blog/100250/extend-luogu-si-yong-zhi-na"></a>`).append(
+				(() => {
+					const $btn = $(`<button data-v-370e72e2="" data-v-61c90fba="" type="button" class="lfe-form-sz-middle" data-v-22efe7ee="" style="font-family: Microsoft YaHei;border-color: rgb(255, 193, 22); background-color: rgb(255, 193, 22);">Help</button>`)
+					$btn.on("click", () => {
+
+					})
+					.mouseenter(() => {$btn.css("background-color", "rgba(255, 193, 22, 0.9)")})
+					.mouseleave(() => {$btn.css("background-color", "rgb(255, 193, 22)")})
+					return $btn
+				})()
+			)
+		).appendTo($('#ex-settings-update-versions'))
 		/*	uindow.addEventListener("message", e => {
 			log("Listening message:", e.data)
 			if (e.data[0] !== "update") return
