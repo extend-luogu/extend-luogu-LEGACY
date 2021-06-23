@@ -1222,8 +1222,8 @@ mod.reg("copy-code-block", "代码块功能优化", "@/*", () => {
                     .appendTo($("body"))
                     .text($e.text())
                     .select()
-                btn.text("复制成功")
-                setTimeout(() => btn.text("复制"), 1000)
+                btn.text("复制成功").toggleClass("exlg-copied")
+                setTimeout(() => btn.text("复制").toggleClass("exlg-copied"), 1000)
                 document.execCommand("copy")
                 $textarea.remove()
             }).get(0))
@@ -1262,19 +1262,29 @@ mod.reg("copy-code-block", "代码块功能优化", "@/*", () => {
 .exlg-copy {
     position: relative;
     display: inline-block;
-
-    padding: 1px 5px 1px 5px;
-
-    background-color: white;
-	border: 1px solid #6495ED;
-    color: cornflowerblue;
-    border-radius: 6px;
-    font-size: 12px;
+    border: 1px solid #3498db;
+    border-radius: 3px;
+    background-color: rgba(52, 152, 219, 0);
+    color: #3498db;
+    font-family: -apple-system, BlinkMacSystemFont, "San Francisco", "Helvetica Neue", "Noto Sans", "Noto Sans CJK SC", "Noto Sans CJK", "Source Han Sans", "PingFang SC", "Segoe UI", "Microsoft YaHei", sans-serif;
+    flex: none;
+    outline: 0;
+    cursor: pointer;
+    font-weight: inherit;
+    line-height: 1.5;
+    text-align: center;
+    vertical-align: middle;
+    background: 0 0;
+    font-size: .8em;
     float: right;
-	font-family: -apple-system, BlinkMacSystemFont, "San Francisco", "Helvetica Neue", "Noto Sans", "Noto Sans CJK SC", "Noto Sans CJK", "Source Han Sans", "PingFang SC", "Segoe UI", "Microsoft YaHei", sans-serif
+    padding: 0 5px;
 }
 .exlg-copy:hover {
-    box-shadow: 0 0 7px dodgerblue;
+    background-color: rgba(52, 152, 219, 0.1);
+}
+div.exlg-copied {
+    background-color: rgba(52, 152, 219, 0.9)!important;
+    color: white!important;
 }
 .copy-btn {
     font-size: .8em;
@@ -1786,7 +1796,7 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
 }`)
 
 
-mod.reg("discuss-save", "讨论保存 - 原作者__OwO__", "@/*", () => {
+mod.reg("discuss-save", "讨论保存", "@/*", () => {
     if (!/\/discuss\/show\/[1-9]\d*$/.test(location.pathname)) {
         return
     }
