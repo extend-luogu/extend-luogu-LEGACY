@@ -10,7 +10,7 @@
 // @match          https://service-psscsax9-1305163805.sh.apigw.tencentcs.com/release/exlg-version
 // @match          https://www.bilibili.com/robots.txt?*
 // @match          http://localhost/*
-// @require 	     https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js
+// @require 	   https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js
 // @require        https://cdn.bootcdn.net/ajax/libs/js-xss/0.3.3/xss.min.js
 // @require        https://cdn.bootcdn.net/ajax/libs/marked/2.0.1/marked.min.js
 // @require        https://cdn.jsdelivr.net/gh/bossbaby2005/markdown-palettes@3a564ba0d30d88848ec486b2c36553cce87f0c7f/mp.js
