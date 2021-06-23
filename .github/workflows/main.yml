@@ -22,7 +22,10 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2.1.5
       - name: ESLint Plus
         uses: bradennapier/eslint-plus-action@v3
         with: 
           fix: true
+          npmInstall: true
