@@ -201,32 +201,36 @@ const mod = {
 mod.reg("dash", "控制面板", "@/*", () => {
   // yjp flaged.
   const $dash = $(`<div id="exlg-dash">exlg</div>`).prependTo($("nav.user-nav, div.user-nav > nav"));
-  const $win = $(`
-<span id="exlg-dash-window">
-    <p>
-        <b>版本</b> <a id="exlg-dash-version-update">检查更新</a> <br />
-        <a href="https://github.com/optimize-2/extend-luogu">GitHub</a> |
-        <a href="https://github.com/optimize-2/extend-luogu/raw/main/extend-luogu.user.js">Raw</a> |
-        <a href="https://hub.fastgit.org/optimize-2/extend-luogu/raw/main/extend-luogu.user.js">FastGit</a>
-        <br />
-        <a href="https://cdn.jsdelivr.net/gh/optimize-2/extend-luogu@latest/extend-luogu.user.js">JsDelivr</a>
-        <i class="exlg-icon exlg-info" name="一键更新"></i>
-        <br />
-        <span id="exlg-dash-verison">${GM_info.script.version}</span>
-    </p>
-    <p>
-        <b>模块管理</b> <br />
-        <a id="exlg-dash-mods-save">保存</a>
-        <i class="exlg-icon exlg-info" name="刷新后生效"></i></span>
-        <ul id="exlg-dash-mods"></ul>
-    </p>
-    <p>
-        <b>关于</b> <br />
-        <a href="https://www.luogu.com.cn/team/33255">官方团队 33255</a> <br />
-        <a href="https://qm.qq.com/cgi-bin/qm/qr?k=ODbPTKWbZfGq3ll3yBfjdDKWDPhJhlX4&jump_from=webapi">QQ群 817265691</a> <br />
-    </p>
-</span>
-    `).appendTo($dash).on("click", e => e.stopPropagation());
+  ReactDOM.render( /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("text", null, "exlg"), /*#__PURE__*/React.createElement("span", {
+    id: "exlg-dash-window"
+  }, /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("b", null, "\u7248\u672C"), " ", /*#__PURE__*/React.createElement("a", {
+    id: "exlg-dash-version-update"
+  }, "\u68C0\u67E5\u66F4\u65B0"), " ", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("a", {
+    href: "https://github.com/optimize-2/extend-luogu"
+  }, "GitHub"), " |", /*#__PURE__*/React.createElement("a", {
+    href: "https://github.com/optimize-2/extend-luogu/raw/main/extend-luogu.user.js"
+  }, "Raw"), " |", /*#__PURE__*/React.createElement("a", {
+    href: "https://hub.fastgit.org/optimize-2/extend-luogu/raw/main/extend-luogu.user.js"
+  }, "FastGit"), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("a", {
+    href: "https://cdn.jsdelivr.net/gh/optimize-2/extend-luogu@latest/extend-luogu.user.js"
+  }, "JsDelivr"), /*#__PURE__*/React.createElement("i", {
+    class: "exlg-icon exlg-info",
+    name: "\u4E00\u952E\u66F4\u65B0"
+  }), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("span", {
+    id: "exlg-dash-verison"
+  }, GM_info.script.version)), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("b", null, "\u6A21\u5757\u7BA1\u7406"), " ", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("a", {
+    id: "exlg-dash-mods-save"
+  }, "\u4FDD\u5B58"), /*#__PURE__*/React.createElement("i", {
+    class: "exlg-icon exlg-info",
+    name: "\u5237\u65B0\u540E\u751F\u6548"
+  }), /*#__PURE__*/React.createElement("ul", {
+    id: "exlg-dash-mods"
+  })), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("b", null, "\u5173\u4E8E"), " ", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("a", {
+    href: "https://www.luogu.com.cn/team/33255"
+  }, "\u5B98\u65B9\u56E2\u961F 33255"), " ", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("a", {
+    href: "https://qm.qq.com/cgi-bin/qm/qr?k=ODbPTKWbZfGq3ll3yBfjdDKWDPhJhlX4&jump_from=webapi"
+  }, "QQ\u7FA4 817265691"), " ", /*#__PURE__*/React.createElement("br", null)))), document.getElementById("exlg-dash"));
+  const $win = $("#exlg-dash").on("click", e => e.stopPropagation());
   $(`<i class="exlg-icon exlg-warn"></i>`).hide().appendTo($dash);
   const $mods = $("#exlg-dash-mods");
 
