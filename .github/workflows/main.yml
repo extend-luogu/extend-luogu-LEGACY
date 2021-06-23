@@ -4,7 +4,7 @@ env:
   TZ: Asia/Shanghai
 
 on:
-  # 当master分支提交时
+  # 当main分支提交时
   push:
     branches:
       - main
@@ -20,25 +20,21 @@ jobs:
           node-version: "12"
 
       # 安装和构建
-      - name: Install and Build
+      - name: Install and run eslint
         run: |
           yarn
-          yarn run build
           yarn run eslint
 
-      - name: Update dist folder to repository
-        env:
-          # 仓库用户名
-          REPO_USERNAME: "bossbaby2005"
-          # GitHub Pages仓库名
-          DIST_REPO: "extend-luogu"
-          # GitHub Token
-          GITHUB_TOKEN: ${{ secrets.G_TOKEN }}
-
-        run: |
-          git config --global user.email "Action@GitHub.com"
-          git config --global user.name "GitHub Action"
-
-          git init && git add .
-          git commit -m "GitHub Actions Auto Builder at $(date +'%Y-%m-%d %H:%M:%S')"
-          git push --force --quiet "https://$GITHUB_TOKEN@github.com/$REPO_USERNAME/$DIST_REPO.git" main:main
+      - name: Check diff
+        run: git diff --exit-code HEAD
+      
+      - name: Create Pull Request
+        if: failure()
+        uses: peter-evans/create-pull-request@v3.10.0
+        with:
+          commit-message: "style: format codes"
+          title: "style: format codes for ${{ github.actor }} on ${{ github.ref }}"
+          labels: "style"
+          assignees: "${{ github.actor }}"
+          reviewers: "${{ github.actor }}"
+          branch: "auto-pr/eslint/${{ github.ref }}"
