@@ -10,13 +10,14 @@
 // @match          https://service-psscsax9-1305163805.sh.apigw.tencentcs.com/release/exlg-version
 // @match          https://www.bilibili.com/robots.txt?*
 // @match          http://localhost/*
-// @require        https://cdn.bootcdn.net/ajax/libs/jquery/2.1.1/jquery.min.js
+// @require 	     https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js
 // @require        https://cdn.bootcdn.net/ajax/libs/js-xss/0.3.3/xss.min.js
 // @require        https://cdn.bootcdn.net/ajax/libs/marked/2.0.1/marked.min.js
-// @require        https://cdn.jsdelivr.net/gh/bossbaby2005/markdown-palettes@master/mp.js
-// @require        https://cdn.jsdelivr.net/gh/bossbaby2005/markdown-palettes@master/md.min.js
+// @require        https://cdn.jsdelivr.net/gh/bossbaby2005/markdown-palettes@3a564ba0d30d88848ec486b2c36553cce87f0c7f/mp.js
+// @require        https://cdn.jsdelivr.net/gh/bossbaby2005/markdown-palettes@e8d2f7699466341bfd85b0a2182d2747d7cab728/md.min.js
 // @require        https://cdn.bootcdn.net/ajax/libs/wordcloud2.js/1.2.2/wordcloud2.js
-// @require           https://cdn.bootcdn.net/ajax/libs/FileSaver.js/1.0.0/FileSaver.min.js
+// @require	       https://cdn.bootcdn.net/ajax/libs/FileSaver.js/1.0.0/FileSaver.min.js
+// @updateURL      https://github.com/optimize-2/extend-luogu
 // @grant          GM_addStyle
 // @grant          GM_getValue
 // @grant          GM_setValue
@@ -26,6 +27,7 @@
 // @grant          unsafeWindow
 // @connect        localhost
 // @connect        luogulo.gq
+// @supportURL     mailto:Icant@AKIOI.net
 // ==/UserScript==
 
 // ==Utilities==
