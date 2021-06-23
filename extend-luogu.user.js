@@ -35,12 +35,9 @@ const html_circleswitch_on = `<svg data-v-2dc28d52="" aria-hidden="true" focusab
 const html_circleswitch_off = `<svg data-v-2dc28d52="" aria-hidden="true" focusable="false" data-prefix="far" data-icon="circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="fa-input svg-inline--fa fa-circle fa-w-16"><path data-v-2dc28d52="" fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 448c-110.5 0-200-89.5-200-200S145.5 56 256 56s200 89.5 200 200-89.5 200-200 200z" class=""></path></svg>`
 
 const show_exlg_updlog = () => uindow.show_alert(`extend-luogu Ver. ${ GM_info.script.version } 更新日志`, `
-1. 钩子被我做完了不可能再有bug了再有我吃*                                 
-2.(追加)修复了code的hook写错的bug和exlg设置处前进后退的鬼畜bug
+1. 增加笔记功能
+2. better hook!
 `)
-//yjp flaged
-let dash_delay = false, code_delay = false, bind_lock = false, settings_lock = false
-//钩子用的
 
 const uindow = unsafeWindow
 const $ = jQuery
@@ -211,47 +208,6 @@ const mod = {
     }
 }
 
-mod.reg_main("springboard", "跨域跳板", "@bili/robots.txt", () => {
-    const q = new URLSearchParams(location.search)
-    if (q.has("benben")) {
-        document.write(`<iframe src="https://service-ig5px5gh-1305163805.sh.apigw.tencentcs.com/release/APIGWHtmlDemo-1615602121"></iframe>`)
-        uindow.addEventListener("message", e => {
-            e.data.unshift("benben")
-            uindow.parent.postMessage(e.data, "*")
-        })
-    }
-    else if (q.has("update")) {
-        document.write(`<iframe src="https://service-psscsax9-1305163805.sh.apigw.tencentcs.com/release/exlg-version"></iframe>`)
-        uindow.addEventListener("message", e => {
-            e.data.unshift("update")
-            uindow.parent.postMessage(e.data, "*")
-        })
-    }
-    else if (q.has("url")) {
-        const url = q.get("url")
-        if (confirm(`是否加载来自 ${url} 的页面？`))
-            document.body.innerHTML = `<iframe src="${url}"></iframe>`
-    }
-}, `
-iframe {
-    border: none;
-    display: block;
-    width: 100%;
-    height: 100%;
-}
-iframe::-webkit-scrollbar {
-    display: none;
-}
-`)
-
-mod.reg_main("benben-data", "犇犇数据", "@tcs1/release/APIGWHtmlDemo-1615602121", () =>
-    uindow.parent.postMessage(JSON.parse(document.body.innerText), "*")
-)
-
-mod.reg_main("version-data", "版本数据", "@tcs2/release/exlg-version", () =>
-    uindow.parent.postMessage([ document.body.innerText ], "*")
-)
-
 mod.reg("dash", "控制面板", "@/*", () => { // yjp flaged.
     const $dash = $(`<div id="exlg-dash">exlg</div>`).prependTo($("nav.user-nav, div.user-nav > nav"))
     const $win = $(`
@@ -376,6 +332,47 @@ mod.reg("dash", "控制面板", "@/*", () => { // yjp flaged.
     font-style: normal;
 }
 `)
+
+mod.reg_main("springboard", "跨域跳板", "@bili/robots.txt", () => {
+    const q = new URLSearchParams(location.search)
+    if (q.has("benben")) {
+        document.write(`<iframe src="https://service-ig5px5gh-1305163805.sh.apigw.tencentcs.com/release/APIGWHtmlDemo-1615602121"></iframe>`)
+        uindow.addEventListener("message", e => {
+            e.data.unshift("benben")
+            uindow.parent.postMessage(e.data, "*")
+        })
+    }
+    else if (q.has("update")) {
+        document.write(`<iframe src="https://service-psscsax9-1305163805.sh.apigw.tencentcs.com/release/exlg-version"></iframe>`)
+        uindow.addEventListener("message", e => {
+            e.data.unshift("update")
+            uindow.parent.postMessage(e.data, "*")
+        })
+    }
+    else if (q.has("url")) {
+        const url = q.get("url")
+        if (confirm(`是否加载来自 ${url} 的页面？`))
+            document.body.innerHTML = `<iframe src="${url}"></iframe>`
+    }
+}, `
+iframe {
+    border: none;
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+iframe::-webkit-scrollbar {
+    display: none;
+}
+`)
+
+mod.reg_main("benben-data", "犇犇数据", "@tcs1/release/APIGWHtmlDemo-1615602121", () =>
+    uindow.parent.postMessage(JSON.parse(document.body.innerText), "*")
+)
+
+mod.reg_main("version-data", "版本数据", "@tcs2/release/exlg-version", () =>
+    uindow.parent.postMessage([ document.body.innerText ], "*")
+)
 
 mod.reg("emoticon", "表情输入", [ "@/discuss/lists", "@/discuss/show/*" ], () => {
     /*
@@ -597,7 +594,7 @@ mod.reg_user_tab("user-problem", "题目颜色和比较", "practice", () => ({
 `)//lack of hook
 
 mod.reg("user-css-load", "加载用户样式", "@/*", () => {
-    if (window.location.href == ("https://www.luogu.com.cn/theme/list") || window.location.href == ("https://www.luogu.com.cn/theme/list/")) {
+    if (window.location.href === "https://www.luogu.com.cn/theme/list" || window.location.href === "https://www.luogu.com.cn/theme/list/") {
         const $ps = $(`
 	<div id="exlg-user-css">
 	<h4>自定义css</h4>
@@ -1310,7 +1307,7 @@ mod.reg_board("search-user", "查找用户名", $board => {
         })
     }
     const $search_user = $("#search-user").on("click", func)
-    $("#search-user-input").keydown((e) => { if (e.keyCode == 13) func() })
+    $("#search-user-input").keydown((e) => { if (e.keyCode === 13) func() })
 })
 
 mod.reg("problem-export", "题目导出", "@/*", () => {
@@ -1373,7 +1370,7 @@ mod.reg("problem-export", "题目导出", "@/*", () => {
     let tap_number = 0
     submit_button.on("click", () => {
         tap_number += 1
-        if (tap_number % 6 == 0) {
+        if (tap_number % 6 === 0) {
             btn.remove()
             btn.appendTo($("div.operation"))
             setbtn()
@@ -1392,7 +1389,7 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
         const $fte = $(`<label data-v-2dc28d52="" for="radio-43"> ${ GMdesc } </label>`)
         const $csd = $("<span>" + ((default_value) ? (html_circleswitch_on) : (html_circleswitch_off)) + "</span>").prependTo($fte)
         $fte.on("click", () => {
-            if ($csd.children().attr("data-icon") == "dot-circle") {
+            if ($csd.children().attr("data-icon") === "dot-circle") {
                 $csd.html(html_circleswitch_off)
                 GM_setValue(GMid, false)
             }
@@ -1407,7 +1404,7 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
         const $fte = $(`<label data-v-2dc28d52="" for="radio-43"> ${ sxdesc } </label>`)
         const $csd = $("<span>" + ((mod.map[sxid]) ? (html_circleswitch_on) : (html_circleswitch_off)) + "</span>").prependTo($fte)
         $fte.on("click", () => {
-            if ($csd.children().attr("data-icon") == "dot-circle") {
+            if ($csd.children().attr("data-icon") === "dot-circle") {
                 $csd.html(html_circleswitch_off)
                 mod.map[sxid] = false
                 GM_setValue("mod-map", mod.map)
@@ -1422,15 +1419,15 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
     }
 
     const href_list = ["information", "preference", "security", "extension", "extension-admin"]
-    if (window.location.href == "https://www.luogu.com.cn/user/setting" || window.location.href.indexOf("https://www.luogu.com.cn/user/setting#") == 0) {
-        if (window.location.href == "https://www.luogu.com.cn/user/setting" || href_list.indexOf(window.location.href.substr(38)) == -1) {
+    if (window.location.href === "https://www.luogu.com.cn/user/setting" || window.location.href.indexOf("https://www.luogu.com.cn/user/setting#") == 0) {
+        if (window.location.href === "https://www.luogu.com.cn/user/setting" || href_list.indexOf(window.location.href.substr(38)) == -1) {
             //log('23333')
             //window.location.href = "https://www.luogu.com.cn/user/setting#information"
         }
 
         const $lg_entry = $(".items").children("li")
         const $lg_form_layout = $(".padding-default")
-	    $lg_entry.hide()
+        $lg_entry.hide()
         const $ex_form_layout = $(`<div data-v-796309f8="" data-v-7765a18d="" class="card padding-default" id="exlg-padding" data-v-6febb0e8=""><div data-v-22efe7ee="" data-v-61c90fba="" data-v-7765a18d="" class="exlg-form-layout" data-v-796309f8=""></div></div>`).hide().appendTo($(".full-container"))
         const $ex_admin_form_layout = $(`<div data-v-796309f8="" data-v-7765a18d="" class="card padding-default" id="exlg-padding" data-v-6febb0e8=""><div data-v-22efe7ee="" data-v-61c90fba="" data-v-7765a18d="" class="exlg-admin-form-layout" data-v-796309f8=""></div></div>`).hide().appendTo($(".full-container"))
         //set the layout
@@ -1516,67 +1513,57 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
             $ex_entry_info.children().addClass("selected")
         }
         log(window.location.href.substr(38))
-        if (window.location.href.substr(38) == "extension") {
+        if (window.location.href.substr(38) === "extension") {
             log("extension settings~")
             $lg_form_layout.hide()
             $ex_form_layout.show()
             $ex_admin_form_layout.hide()
         }
-        if (window.location.href.substr(38) == "extension-admin") {
+        if (window.location.href.substr(38) === "extension-admin") {
             log("hidden extension settings~")
             $lg_form_layout.hide()
             $ex_form_layout.hide()
             $ex_admin_form_layout.show()
         }
         $ex_entry[0].on("click", () => {
-            settings_lock = true
             $lg_entry[0].click()
             $(".entry").removeClass("selected")
             $ex_entry[0].children().addClass("selected")
             $lg_form_layout.show()
             $ex_form_layout.hide()
             $ex_admin_form_layout.hide()
-            setTimeout(() => settings_lock = false, 300)
         })
         $ex_entry[1].on("click", () => {
-            settings_lock = true
             $lg_entry[1].click()
             $(".entry").removeClass("selected")
             $ex_entry[1].children().addClass("selected")
             $lg_form_layout.show()
             $ex_form_layout.hide()
             $ex_admin_form_layout.hide()
-            setTimeout(() => settings_lock = false, 300)
         })
         $ex_entry[2].on("click", () => {
-            settings_lock = true
             $lg_entry[2].click()
             $(".entry").removeClass("selected")
             $ex_entry[2].children().addClass("selected")
             $lg_form_layout.show()
             $ex_form_layout.hide()
             $ex_admin_form_layout.hide()
-            setTimeout(() => settings_lock = false, 300)
         })
         $ex_entry[3].on("click", () => {
-            settings_lock = true
             $(".entry").removeClass("selected")
             $ex_entry[3].children().addClass("selected")
             $lg_form_layout.hide()
             $ex_form_layout.show()
             $ex_admin_form_layout.hide()
             window.location.href = "https://www.luogu.com.cn/user/setting#extension"
-            setTimeout(() => settings_lock = false, 300)
         })
         $ex_entry[4].on("click", () => {
-            settings_lock = true
             $(".entry").removeClass("selected")
             $ex_entry[4].children().addClass("selected")
             $lg_form_layout.hide()
             $ex_form_layout.hide()
             $ex_admin_form_layout.show()
             window.location.href = "https://www.luogu.com.cn/user/setting#extension-admin"
-            setTimeout(() => settings_lock = false, 300)
         })
 
         //module设置
@@ -1834,7 +1821,7 @@ mod.reg("discuss-save", "讨论保存 - 原作者__OwO__", "@/*", () => {
 })
 
 mod.reg("update-log", "更新日志显示", "@/*", () => {
-    if (window.location.href == "https://www.luogu.com.cn/" && GM_getValue("exlg-last-used-version") != GM_info.script.version) {
+    if (window.location.href === "https://www.luogu.com.cn/" && GM_getValue("exlg-last-used-version") !== GM_info.script.version) {
         show_exlg_updlog()
         GM_setValue("exlg-last-used-version", GM_info.script.version)
     }
@@ -1955,6 +1942,9 @@ mod.reg("notepad", "洛谷笔记", "@/*", () => {
     }
 
     async function inject() {
+        if (!/\/problem\/(U|T|P|CF|AT|SP|UVA)[1-9]\d*$/.test(location.pathname)) {
+            return
+        }
         const db = await openDB(DBName, DBVer)
 
         let code
@@ -2322,7 +2312,7 @@ mod.reg("notepad", "洛谷笔记", "@/*", () => {
             })
         }
 
-        uindow.history.pushState = uindow.history.replaceState = null
+        // uindow.history.pushState = uindow.history.replaceState = null
 
         const db = await openDB(DBName, DBVer)
         const url = new URL(window.location.href)
@@ -2360,63 +2350,40 @@ mod.reg("notepad", "洛谷笔记", "@/*", () => {
     })()
 })
 
+uindow.console.info = (function () {
+    const orig = console.info
+    return function () {
+        const newEvent = orig.apply(this, arguments)
+        if (arguments[0] === "[@lfe/loader]")
+            window.dispatchEvent(new Event("lfeloaded"))
+        return newEvent
+    }
+})()
 
-$("body").bind("DOMSubtreeModified", _ => {
-    setTimeout(() => {
-        if (!code_delay && $("pre:has(> code):not([exlg-copy-code-block=''])").length) {
-            code_delay = true
-            console.log($("pre:has(> code):not([exlg-copy-code-block=''])")[0])
-            setTimeout(() => {
-                mod.execute("copy-code-block")
-                setTimeout(() => { code_delay = false }, 300)
-            }, 300)
-        }
-    }, 0)//奇怪的进程1
-    //*
-    if (!$("#exlg-dash").length && !dash_delay && !bind_lock) {
-        bind_lock = true
-        dash_delay = true//我还不信了，双保险
-
-        setTimeout(() => {
-            mod.execute()
-            dash_delay = false
-            setTimeout(() => { bind_lock = false }, 300)
-        }, 300)
-    }
-})//解决每次奇怪的改变
-window.onhashchange = _ => {
-    if (window.location.href != "https://www.luogu.com.cn/user/setting" && window.location.href.indexOf("https://www.luogu.com.cn/user/setting#") != 0) return
-    if (settings_lock) return
-    settings_lock = true
-    const buttons = $(`li[data-v-7092f3a4=""]:has(> span[data-v-7092f3a4=""].entry:not(:hidden))`)
-    if (window.location.href.substr(38) == "extension") {
-        log("F extension settings~")
-        $(buttons[3]).click()
-    }
-    else if (window.location.href.substr(38) == "extension-admin") {
-        log("F hidden extension settings~")
-        $(buttons[4]).click()
-    }
-    else {
-        log("F default settings~")
-        if (window.location.href.substr(38) == "security") $(buttons[2]).click()
-        else if (window.location.href.substr(38) == "preference") $(buttons[1]).click()
-        else $(buttons[0]).click()
-    }
-    settings_lock = false
+function sleep(t) {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => resolve(), t)
+    })
 }
-(_ => {
-    if (!$("#exlg-dash").length && !dash_delay) {
-        bind_lock = true
-        dash_delay = true
 
-        setTimeout(() => {
-            mod.execute()
-            dash_delay = false
-            setTimeout(() => { bind_lock = false }, 300)
-        }, 300)
+async function inject() {
+    await sleep(200)
+
+    if ($("pre:has(> code):not([exlg-copy-code-block=''])").length) {
+        console.log($("pre:has(> code):not([exlg-copy-code-block=''])")[0])
+        mod.execute("copy-code-block")
     }
-})("fuck_you")//解决第一次
+
+    if ($("#exlg-dash").length || !$("main.lfe-body").html()) return
+
+    mod.execute()
+
+    console.log("injected")
+}
+
+window.addEventListener("lfeloaded", inject)
+setTimeout(inject, 400)
+
 log("Lauching")
 log(GM_listValues())
 
