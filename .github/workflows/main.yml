@@ -1,29 +1,43 @@
-# This is a basic workflow to help you get started with Actions
+name: buildAndDeploy
 
-name: CI
+env:
+  TZ: Asia/Shanghai
 
-# Controls when the action will run.
 on:
-  # Triggers the workflow on push or pull request events but only for the main branch
+  # 当master分支提交时
   push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+    branches:
+      - main
 
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+# 开始任务
 jobs:
-  # This workflow contains a single job called "build"
-  eslint:
-    # The type of runner that the job will run on
+  main:
     runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - name: ESLint Plus
-        uses: bradennapier/eslint-plus-action@v3
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
         with:
-          fix: true
-          npmInstall: true
+          node-version: "12"
+
+      # 安装和构建
+      - name: Install and Build
+        run: |
+          yarn
+          yarn run build
+
+      - name: Update dist folder to repository
+        env:
+          # 仓库用户名
+          REPO_USERNAME: "bossbaby2005"
+          # GitHub Pages仓库名
+          DIST_REPO: "extend-luogu"
+          # GitHub Token
+          GITHUB_TOKEN: ${{ secrets.G_TOKEN }}
+
+        run: |
+          git config --global user.email "Action@GitHub.com"
+          git config --global user.name "GitHub Action"
+
+          git init && git add .
+          git commit -m "GitHub Actions Auto Builder at $(date +'%Y-%m-%d %H:%M:%S')"
+          git push --force --quiet "https://$GITHUB_TOKEN@github.com/$REPO_USERNAME/$DIST_REPO.git" main:main
