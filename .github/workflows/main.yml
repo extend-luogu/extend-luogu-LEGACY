@@ -1,4 +1,4 @@
-name: buildAndDeploy
+name: check eslint
 
 env:
   TZ: Asia/Shanghai
