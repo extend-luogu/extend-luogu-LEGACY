@@ -10,13 +10,13 @@
 // @match          https://service-psscsax9-1305163805.sh.apigw.tencentcs.com/release/exlg-version
 // @match          https://www.bilibili.com/robots.txt?*
 // @match          http://localhost/*
-// @require 	   https://cdn.bootcdn.net/ajax/libs/jquery/2.1.1/jquery.min.js
+// @require        https://cdn.bootcdn.net/ajax/libs/jquery/2.1.1/jquery.min.js
 // @require        https://cdn.bootcdn.net/ajax/libs/js-xss/0.3.3/xss.min.js
 // @require        https://cdn.bootcdn.net/ajax/libs/marked/2.0.1/marked.min.js
 // @require        https://cdn.jsdelivr.net/gh/bossbaby2005/markdown-palettes@master/mp.js
 // @require        https://cdn.jsdelivr.net/gh/bossbaby2005/markdown-palettes@master/md.min.js
 // @require        https://cdn.bootcdn.net/ajax/libs/wordcloud2.js/1.2.2/wordcloud2.js
-// @require	       https://cdn.bootcdn.net/ajax/libs/FileSaver.js/1.0.0/FileSaver.min.js
+// @require           https://cdn.bootcdn.net/ajax/libs/FileSaver.js/1.0.0/FileSaver.min.js
 // @grant          GM_addStyle
 // @grant          GM_getValue
 // @grant          GM_setValue
@@ -597,14 +597,14 @@ mod.reg_user_tab("user-problem", "题目颜色和比较", "practice", () => ({
 mod.reg("user-css-load", "加载用户样式", "@/*", () => {
     if (window.location.href === "https://www.luogu.com.cn/theme/list" || window.location.href === "https://www.luogu.com.cn/theme/list/") {
         const $ps = $(`
-	<div id="exlg-user-css">
-	<h4>自定义css</h4>
-		<div class="am-form-group am-form"><textarea rows="3" id="custom-css-input"></textarea></div><p>
-		<button data-v-370e72e2="" data-v-61c90fba="" type="button" class="lfe-form-sz-middle" data-v-22efe7ee="" style="
-		color: white;border-color: rgb(231, 76, 60); background-color: rgb(231, 76, 60);" id="save-css-button">保存</button>
-	</p>
-	</div>
-	`).appendTo(".full-container")
+    <div id="exlg-user-css">
+    <h4>自定义css</h4>
+        <div class="am-form-group am-form"><textarea rows="3" id="custom-css-input"></textarea></div><p>
+        <button data-v-370e72e2="" data-v-61c90fba="" type="button" class="lfe-form-sz-middle" data-v-22efe7ee="" style="
+        color: white;border-color: rgb(231, 76, 60); background-color: rgb(231, 76, 60);" id="save-css-button">保存</button>
+    </p>
+    </div>
+    `).appendTo(".full-container")
 
         $("#custom-css-input").val(GM_getValue("user-css"))
         $("#save-css-button").on("click", () => {
@@ -745,7 +745,7 @@ mod.reg_board("rand-problem-ex", "随机跳题ex", $board => {
     <input type="checkbox" />
     ` + difficulty_html[i] + `<br/>
 </li>
-		`).appendTo($diffs)
+        `).appendTo($diffs)
         $m.children("input")
             .prop("checked", difficulty_select[i] == 1)
             .on("change", () => {
@@ -759,7 +759,7 @@ mod.reg_board("rand-problem-ex", "随机跳题ex", $board => {
     <input type="checkbox" />
     ` + source_html[i] + `<br/>
 </li>
-		`).appendTo($diffs)
+        `).appendTo($diffs)
         $m.children("input")
             .prop("checked", source_select[i] == 1)
             .on("change", () => {
@@ -858,7 +858,7 @@ mod.reg_board("rand-problem-ex", "随机跳题ex", $board => {
     })
 },  `
 #exlg-rand-diffs {
-	list-style-type:none
+    list-style-type:none
 }
 .exlg-rand-settings {
     position: relative;
@@ -867,7 +867,7 @@ mod.reg_board("rand-problem-ex", "随机跳题ex", $board => {
     padding: 1px 5px 1px 5px;
 
     background-color: white;
-	border: 1px solid #6495ED;
+    border: 1px solid #6495ED;
     color: cornflowerblue;
     border-radius: 6px;
     font-size:12px;
@@ -881,28 +881,28 @@ mod.reg_board("rand-problem-ex", "随机跳题ex", $board => {
     font-size:1px;
 }
 .exlg-color-red {
-	background-color: rgb(254, 76, 97)
+    background-color: rgb(254, 76, 97)
 }
 .exlg-color-orange {
-	background-color: rgb(243, 156, 17)
+    background-color: rgb(243, 156, 17)
 }
 .exlg-color-yellow {
-	background-color: rgb(255, 193, 22)
+    background-color: rgb(255, 193, 22)
 }
 .exlg-color-green {
-	background-color: rgb(82, 196, 26)
+    background-color: rgb(82, 196, 26)
 }
 .exlg-color-blue {
-	background-color: rgb(52, 152, 219)
+    background-color: rgb(52, 152, 219)
 }
 .exlg-color-purple {
-	background-color: rgb(157, 61, 207)
+    background-color: rgb(157, 61, 207)
 }
 .exlg-color-black {
-	background-color: rgb(14, 29, 105)
+    background-color: rgb(14, 29, 105)
 }
 .exlg-color-grey {
-	background-color: rgb(191, 191, 191)
+    background-color: rgb(191, 191, 191)
 }
 .exlg-rand-settings:hover {
     box-shadow: 0 0 7px dodgerblue;
@@ -1444,27 +1444,27 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
         //set the layout
         $(
             `<div data-v-22efe7ee="" class="row">
-	<span data-v-22efe7ee="">
-		<span data-v-9a2394ca="" data-v-22efe7ee="">模块开关</span>
-	</span><div data-v-22efe7ee=""><div data-v-9a2394ca="" data-v-22efe7ee="" id="ex-settings-module-switch">
-		<p data-v-9a2394ca="" data-v-22efe7ee="" class="lfe-caption">设置exlg插件各模块的开启与关闭。</p>
-	</div></div>
+    <span data-v-22efe7ee="">
+        <span data-v-9a2394ca="" data-v-22efe7ee="">模块开关</span>
+    </span><div data-v-22efe7ee=""><div data-v-9a2394ca="" data-v-22efe7ee="" id="ex-settings-module-switch">
+        <p data-v-9a2394ca="" data-v-22efe7ee="" class="lfe-caption">设置exlg插件各模块的开启与关闭。</p>
+    </div></div>
 </div>`).appendTo($ex_form_layout)
         $(
             `<div data-v-22efe7ee="" class="row">
-	<span data-v-22efe7ee="">
-		<span data-v-9a2394ca="" data-v-22efe7ee="">模块设置</span>
-	</span><div data-v-22efe7ee=""><div data-v-9a2394ca="" data-v-22efe7ee="" id="ex-settings-module-settings">
-		<p data-v-9a2394ca="" data-v-22efe7ee="" class="lfe-caption">设置exlg插件特定模块的功能。</p>
-	</div></div>
+    <span data-v-22efe7ee="">
+        <span data-v-9a2394ca="" data-v-22efe7ee="">模块设置</span>
+    </span><div data-v-22efe7ee=""><div data-v-9a2394ca="" data-v-22efe7ee="" id="ex-settings-module-settings">
+        <p data-v-9a2394ca="" data-v-22efe7ee="" class="lfe-caption">设置exlg插件特定模块的功能。</p>
+    </div></div>
 </div>`).appendTo($ex_form_layout)
         $(
             `<div data-v-22efe7ee="" class="row">
-	<span data-v-22efe7ee="">
-		<span data-v-9a2394ca="" data-v-22efe7ee="">高级设置</span>
-	</span><div data-v-22efe7ee=""><div data-v-9a2394ca="" data-v-22efe7ee="" id="ex-settings-advanced-settings">
-		<p data-v-9a2394ca="" data-v-22efe7ee="" class="lfe-caption">一些奇怪的东西。</p>
-	</div></div>
+    <span data-v-22efe7ee="">
+        <span data-v-9a2394ca="" data-v-22efe7ee="">高级设置</span>
+    </span><div data-v-22efe7ee=""><div data-v-9a2394ca="" data-v-22efe7ee="" id="ex-settings-advanced-settings">
+        <p data-v-9a2394ca="" data-v-22efe7ee="" class="lfe-caption">一些奇怪的东西。</p>
+    </div></div>
 </div>`).appendTo($ex_form_layout)
 
 
@@ -1474,37 +1474,37 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
 
         $(
             `<div data-v-22efe7ee="" class="row">
-	<span data-v-22efe7ee="">
-		<span data-v-9a2394ca="" data-v-22efe7ee="">意见反馈</span>
-	</span><div data-v-22efe7ee=""><div data-v-9a2394ca="" data-v-22efe7ee="" id="ex-settings-fuck-you">
-		<p data-v-9a2394ca="" data-v-22efe7ee="" class="lfe-caption">请暂时前往exlg的github反馈issues。</p>
-	</div></div>
+    <span data-v-22efe7ee="">
+        <span data-v-9a2394ca="" data-v-22efe7ee="">意见反馈</span>
+    </span><div data-v-22efe7ee=""><div data-v-9a2394ca="" data-v-22efe7ee="" id="ex-settings-fuck-you">
+        <p data-v-9a2394ca="" data-v-22efe7ee="" class="lfe-caption">请暂时前往exlg的github反馈issues。</p>
+    </div></div>
 </div>`).appendTo($ex_admin_form_layout)
 
 
         $(
             `<div data-v-22efe7ee="" class="row">
-	<span data-v-22efe7ee="">
-		<span data-v-9a2394ca="" data-v-22efe7ee="">版本&更新</span>
-	</span><div data-v-22efe7ee=""><div data-v-9a2394ca="" data-v-22efe7ee="" id="ex-settings-update-versions">
+    <span data-v-22efe7ee="">
+        <span data-v-9a2394ca="" data-v-22efe7ee="">版本&更新</span>
+    </span><div data-v-22efe7ee=""><div data-v-9a2394ca="" data-v-22efe7ee="" id="ex-settings-update-versions">
 
-	</div></div>
+    </div></div>
 </div>`).appendTo($ex_admin_form_layout)
         $(
             `<div data-v-22efe7ee="" class="row">
-	<span data-v-22efe7ee="">
-		<span data-v-9a2394ca="" data-v-22efe7ee="">实验性玩法</span>
-	</span><div data-v-22efe7ee=""><div data-v-9a2394ca="" data-v-22efe7ee="" id="ex-settings-features-laboratory">
-		<p data-v-9a2394ca="" data-v-22efe7ee="" class="lfe-caption">一些脑洞会先在这里测试。</p>
-	</div></div>
+    <span data-v-22efe7ee="">
+        <span data-v-9a2394ca="" data-v-22efe7ee="">实验性玩法</span>
+    </span><div data-v-22efe7ee=""><div data-v-9a2394ca="" data-v-22efe7ee="" id="ex-settings-features-laboratory">
+        <p data-v-9a2394ca="" data-v-22efe7ee="" class="lfe-caption">一些脑洞会先在这里测试。</p>
+    </div></div>
 </div>`).appendTo($ex_admin_form_layout)
         $(
             `<div data-v-22efe7ee="" class="row">
-	<span data-v-22efe7ee="">
-		<span data-v-9a2394ca="" data-v-22efe7ee="">数据&调试</span>
-	</span><div data-v-22efe7ee=""><div data-v-9a2394ca="" data-v-22efe7ee="" id="ex-settings-data-debug">
-		<p data-v-9a2394ca="" data-v-22efe7ee="" class="lfe-caption">警告，非开发者不要乱动这玩意，否则出什么事情我不负责。</p>
-	</div></div>
+    <span data-v-22efe7ee="">
+        <span data-v-9a2394ca="" data-v-22efe7ee="">数据&调试</span>
+    </span><div data-v-22efe7ee=""><div data-v-9a2394ca="" data-v-22efe7ee="" id="ex-settings-data-debug">
+        <p data-v-9a2394ca="" data-v-22efe7ee="" class="lfe-caption">警告，非开发者不要乱动这玩意，否则出什么事情我不负责。</p>
+    </div></div>
 </div>`).appendTo($ex_admin_form_layout)
         //end.
 
@@ -1778,17 +1778,17 @@ mod.reg("luogu-settings-extension", "洛谷风格扩展设置", "@/user/setting*
                     })()
                 )
             ).appendTo($("#ex-settings-update-versions"))
-        /*	uindow.addEventListener("message", e => {
-			log("Listening message:", e.data)
-			if (e.data[0] !== "update") return
-			e.data.shift()
+        /*    uindow.addEventListener("message", e => {
+            log("Listening message:", e.data)
+            if (e.data[0] !== "update") return
+            e.data.shift()
 
-			const
-				latest = e.data[0],
-				version = GM_info.script.version,
-				op = version_cmp(version, latest)
-			$("#settings-newest-version").append($(`<text>${ latest }</text>`))
-		})	*/
+            const
+                latest = e.data[0],
+                version = GM_info.script.version,
+                op = version_cmp(version, latest)
+            $("#settings-newest-version").append($(`<text>${ latest }</text>`))
+        })    */
     }
 }, `.am-form-field {
     font-size: 0.875em;
@@ -1964,24 +1964,24 @@ mod.reg("notepad", "洛谷笔记", "@/*", () => {
 
         $("section.main>section>div>div").prepend(
             `   <details id="notepad-detail" open>
-				<summary id="notepad-summary">笔记</summary>
-				<div style="height:400px" id="notepad-container">
-					<div id="notepad-editor"></div>
-				</div>
-				<br />
-				<div style="display:flex;justify-content:space-between;">
-					<div>
-						<label id="notepad-tag-label">标签</label>
-						<input data-v-a7f7c968="" type="text" class="lfe-form-sz-middle" style="width: 60%; display: none;" id="notepad-tag">
-						<label id="notepad-tag-content"></label>
-					</div>
-					<div>
-						<a id="notepad-opencode" href="javascript: void(0)"><svg data-v-29a65e17="" data-v-303bbf52="" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="edit" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="svg-inline--fa fa-edit fa-w-18"><path data-v-29a65e17="" data-v-303bbf52="" fill="currentColor" d="M402.6 83.2l90.2 90.2c3.8 3.8 3.8 10 0 13.8L274.4 405.6l-92.8 10.3c-12.4 1.4-22.9-9.1-21.5-21.5l10.3-92.8L388.8 83.2c3.8-3.8 10-3.8 13.8 0zm162-22.9l-48.8-48.8c-15.2-15.2-39.9-15.2-55.2 0l-35.4 35.4c-3.8 3.8-3.8 10 0 13.8l90.2 90.2c3.8 3.8 10 3.8 13.8 0l35.4-35.4c15.2-15.3 15.2-40 0-55.2zM384 346.2V448H64V128h229.8c3.2 0 6.2-1.3 8.5-3.5l40-40c7.6-7.6 2.2-20.5-8.5-20.5H48C21.5 64 0 85.5 0 112v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V306.2c0-10.7-12.9-16-20.5-8.5l-40 40c-2.2 2.3-3.5 5.3-3.5 8.5z" class=""></path></svg></a>
-						<text id="notepad-code">代码</text>
-					</div>
-				</div>
-			</details>
-			<style>.mp-editor-zone-full{width:100%!important;}</style>`
+                <summary id="notepad-summary">笔记</summary>
+                <div style="height:400px" id="notepad-container">
+                    <div id="notepad-editor"></div>
+                </div>
+                <br />
+                <div style="display:flex;justify-content:space-between;">
+                    <div>
+                        <label id="notepad-tag-label">标签</label>
+                        <input data-v-a7f7c968="" type="text" class="lfe-form-sz-middle" style="width: 60%; display: none;" id="notepad-tag">
+                        <label id="notepad-tag-content"></label>
+                    </div>
+                    <div>
+                        <a id="notepad-opencode" href="javascript: void(0)"><svg data-v-29a65e17="" data-v-303bbf52="" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="edit" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="svg-inline--fa fa-edit fa-w-18"><path data-v-29a65e17="" data-v-303bbf52="" fill="currentColor" d="M402.6 83.2l90.2 90.2c3.8 3.8 3.8 10 0 13.8L274.4 405.6l-92.8 10.3c-12.4 1.4-22.9-9.1-21.5-21.5l10.3-92.8L388.8 83.2c3.8-3.8 10-3.8 13.8 0zm162-22.9l-48.8-48.8c-15.2-15.2-39.9-15.2-55.2 0l-35.4 35.4c-3.8 3.8-3.8 10 0 13.8l90.2 90.2c3.8 3.8 10 3.8 13.8 0l35.4-35.4c15.2-15.3 15.2-40 0-55.2zM384 346.2V448H64V128h229.8c3.2 0 6.2-1.3 8.5-3.5l40-40c7.6-7.6 2.2-20.5-8.5-20.5H48C21.5 64 0 85.5 0 112v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V306.2c0-10.7-12.9-16-20.5-8.5l-40 40c-2.2 2.3-3.5 5.3-3.5 8.5z" class=""></path></svg></a>
+                        <text id="notepad-code">代码</text>
+                    </div>
+                </div>
+            </details>
+            <style>.mp-editor-zone-full{width:100%!important;}</style>`
         )
 
         $("#notepad-opencode").click((event) => {
@@ -2042,7 +2042,7 @@ mod.reg("notepad", "洛谷笔记", "@/*", () => {
         $("#notepad-tag").keydown(function (event) {
             if (
                 ((event.ctrlKey || event.metaKey) && event.which === 83) ||
-			event.keyCode === 13
+            event.keyCode === 13
             ) {
                 saveNote()
                 $("#notepad-tag").hide()
@@ -2078,14 +2078,14 @@ mod.reg("notepad", "洛谷笔记", "@/*", () => {
 
     async function panel() {
         $("#app-old").html(`
-	<div class="lg-index-content am-center">
-		<div class="am-g">
-			<div class="am-u-md-12">
-				<div class="lg-article" id="notepad-content">
-				</div>
-			</div>
-		</div>
-	</div>`)
+    <div class="lg-index-content am-center">
+        <div class="am-g">
+            <div class="am-u-md-12">
+                <div class="lg-article" id="notepad-content">
+                </div>
+            </div>
+        </div>
+    </div>`)
 
         const db = await openDB(DBName, DBVer)
 
@@ -2141,27 +2141,27 @@ mod.reg("notepad", "洛谷笔记", "@/*", () => {
             let pcode = ""
             if (u.code) pcode = `<a href="/record/${u.code}">代码</a>`
             return `
-			<div style="display:flex;justify-content:flex-start;flex-direction:row;">
-				<p><a href="/problem/${u.pid}">${u.pid} - ${u.title}</a></p>&nbsp;&nbsp;&nbsp;
-				<details id="notepad-detail-${u.pid}"><summary>笔记</summary>
-					${render(u.content)}<hr />
-					<div style="display:flex;justify-content:space-between;">
-						<p>标签: ${getTagLink(u)}</p>
-						${pcode}
-					</div>
-				</details>
-			</div>
-			`
+            <div style="display:flex;justify-content:flex-start;flex-direction:row;">
+                <p><a href="/problem/${u.pid}">${u.pid} - ${u.title}</a></p>&nbsp;&nbsp;&nbsp;
+                <details id="notepad-detail-${u.pid}"><summary>笔记</summary>
+                    ${render(u.content)}<hr />
+                    <div style="display:flex;justify-content:space-between;">
+                        <p>标签: ${getTagLink(u)}</p>
+                        ${pcode}
+                    </div>
+                </details>
+            </div>
+            `
         }
         function renderPnote(u) {
             return `
-			<div style="display:flex;justify-content:flex-start;flex-direction:row;">
-				<p><a href="/?notepad&tag=${u.tag}">${u.tag}</a></p>&nbsp;&nbsp;&nbsp;
-				<details><summary>笔记</summary>
-					${render(u.content)}<hr />
-				</details>
-			</div>
-			`
+            <div style="display:flex;justify-content:flex-start;flex-direction:row;">
+                <p><a href="/?notepad&tag=${u.tag}">${u.tag}</a></p>&nbsp;&nbsp;&nbsp;
+                <details><summary>笔记</summary>
+                    ${render(u.content)}<hr />
+                </details>
+            </div>
+            `
         }
         if (url.searchParams.has("edit")) {
             const tag = url.searchParams.get("tag").trim()
