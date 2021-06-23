@@ -212,34 +212,33 @@ const mod = {
 
 mod.reg("dash", "控制面板", "@/*", () => { // yjp flaged.
     const $dash = $(`<div id="exlg-dash">exlg</div>`).prependTo($("nav.user-nav, div.user-nav > nav"))
-    const $win = $(`
-<span id="exlg-dash-window">
-    <p>
-        <b>版本</b> <a id="exlg-dash-version-update">检查更新</a> <br />
-        <a href="https://github.com/optimize-2/extend-luogu">GitHub</a> |
-        <a href="https://github.com/optimize-2/extend-luogu/raw/main/extend-luogu.user.js">Raw</a> |
-        <a href="https://hub.fastgit.org/optimize-2/extend-luogu/raw/main/extend-luogu.user.js">FastGit</a>
-        <br />
-        <a href="https://cdn.jsdelivr.net/gh/optimize-2/extend-luogu@latest/extend-luogu.user.js">JsDelivr</a>
-        <i class="exlg-icon exlg-info" name="一键更新"></i>
-        <br />
-        <span id="exlg-dash-verison">${ GM_info.script.version }</span>
-    </p>
-    <p>
-        <b>模块管理</b> <br />
-        <a id="exlg-dash-mods-save">保存</a>
-        <i class="exlg-icon exlg-info" name="刷新后生效"></i></span>
-        <ul id="exlg-dash-mods"></ul>
-    </p>
-    <p>
-        <b>关于</b> <br />
-        <a href="https://www.luogu.com.cn/team/33255">官方团队 33255</a> <br />
-        <a href="https://qm.qq.com/cgi-bin/qm/qr?k=ODbPTKWbZfGq3ll3yBfjdDKWDPhJhlX4&jump_from=webapi">QQ群 817265691</a> <br />
-    </p>
-</span>
-    `)
-        .appendTo($dash)
-        .on("click", e => e.stopPropagation())
+    ReactDOM.render(
+        <div><text>exlg</text><span id="exlg-dash-window">
+            <p>
+                <b>版本</b> <a id="exlg-dash-version-update">检查更新</a> <br />
+                <a href="https://github.com/optimize-2/extend-luogu">GitHub</a> |
+                <a href="https://github.com/optimize-2/extend-luogu/raw/main/extend-luogu.user.js">Raw</a> |
+                <a href="https://hub.fastgit.org/optimize-2/extend-luogu/raw/main/extend-luogu.user.js">FastGit</a>
+                <br />
+                <a href="https://cdn.jsdelivr.net/gh/optimize-2/extend-luogu@latest/extend-luogu.user.js">JsDelivr</a>
+                <i class="exlg-icon exlg-info" name="一键更新"></i>
+                <br />
+                <span id="exlg-dash-verison">{ GM_info.script.version }</span>
+            </p>
+            <p>
+                <b>模块管理</b> <br />
+                <a id="exlg-dash-mods-save">保存</a>
+                <i class="exlg-icon exlg-info" name="刷新后生效"></i>
+                <ul id="exlg-dash-mods"></ul>
+            </p>
+            <p>
+                <b>关于</b> <br />
+                <a href="https://www.luogu.com.cn/team/33255">官方团队 33255</a> <br />
+                <a href="https://qm.qq.com/cgi-bin/qm/qr?k=ODbPTKWbZfGq3ll3yBfjdDKWDPhJhlX4&jump_from=webapi">QQ群 817265691</a> <br />
+            </p>
+        </span></div>,
+        document.getElementById("exlg-dash"))
+    const $win = $("#exlg-dash").on("click", e => e.stopPropagation())
     $(`<i class="exlg-icon exlg-warn"></i>`).hide().appendTo($dash)
 
     const $mods = $("#exlg-dash-mods")
