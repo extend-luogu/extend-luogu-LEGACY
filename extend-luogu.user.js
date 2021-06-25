@@ -1955,7 +1955,7 @@ mod.reg("notepad", "洛谷笔记", "@/*", () => {
     }
 
     async function inject() {
-        if (!/\/problem\/(U|T|P|CF|AT|SP|UVA)\d+[A-Z]\d*$/.test(location.pathname)) {
+        if (!/\/problem\/(U|T|P|CF|AT|SP|UVA)\d+[A-Z]*$/.test(location.pathname)) {
             return
         }
         const db = await openDB(DBName, DBVer)
