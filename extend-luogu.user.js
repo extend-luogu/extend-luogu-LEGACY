@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           extend-luogu
 // @namespace      http://tampermonkey.net/
-// @version        6.1.0
+// @version        6.1.1
 // @description    Make Luogu more powerful.
 // @author         optimize_2 ForkKILLET minstdfx haraki swift-zym qinyihao oimaster Maxmilite
 // @match          https://*.luogu.com.cn/*
@@ -16,7 +16,7 @@
 // @require        https://cdn.jsdelivr.net/gh/bossbaby2005/markdown-palettes@3a564ba0d30d88848ec486b2c36553cce87f0c7f/mp.js
 // @require        https://cdn.jsdelivr.net/gh/bossbaby2005/markdown-palettes@e8d2f7699466341bfd85b0a2182d2747d7cab728/md.min.js
 // @require        https://cdn.bootcdn.net/ajax/libs/wordcloud2.js/1.2.2/wordcloud2.js
-// @require	       https://cdn.bootcdn.net/ajax/libs/FileSaver.js/1.0.0/FileSaver.min.js
+// @require        https://cdn.bootcdn.net/ajax/libs/FileSaver.js/1.0.0/FileSaver.min.js
 // @updateURL      https://github.com/optimize-2/extend-luogu
 // @grant          GM_addStyle
 // @grant          GM_getValue
