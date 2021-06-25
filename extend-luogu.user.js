@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           extend-luogu
 // @namespace      http://tampermonkey.net/
-// @version        6.1.1
+// @version        6.1.2
 // @description    Make Luogu more powerful.
 // @author         optimize_2 ForkKILLET minstdfx haraki swift-zym qinyihao oimaster Maxmilite
 // @match          https://*.luogu.com.cn/*
@@ -16,7 +16,7 @@
 // @require        https://cdn.jsdelivr.net/gh/bossbaby2005/markdown-palettes@3a564ba0d30d88848ec486b2c36553cce87f0c7f/mp.js
 // @require        https://cdn.jsdelivr.net/gh/bossbaby2005/markdown-palettes@e8d2f7699466341bfd85b0a2182d2747d7cab728/md.min.js
 // @require        https://cdn.bootcdn.net/ajax/libs/wordcloud2.js/1.2.2/wordcloud2.js
-// @require        https://cdn.bootcdn.net/ajax/libs/FileSaver.js/1.0.0/FileSaver.min.js
+// @require	       https://cdn.bootcdn.net/ajax/libs/FileSaver.js/1.0.0/FileSaver.min.js
 // @updateURL      https://github.com/optimize-2/extend-luogu
 // @grant          GM_addStyle
 // @grant          GM_getValue
@@ -37,8 +37,8 @@ const html_circleswitch_on = `<svg data-v-2dc28d52="" aria-hidden="true" focusab
 const html_circleswitch_off = `<svg data-v-2dc28d52="" aria-hidden="true" focusable="false" data-prefix="far" data-icon="circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="fa-input svg-inline--fa fa-circle fa-w-16"><path data-v-2dc28d52="" fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 448c-110.5 0-200-89.5-200-200S145.5 56 256 56s200 89.5 200 200-89.5 200-200 200z" class=""></path></svg>`
 
 const show_exlg_updlog = () => uindow.show_alert(`extend-luogu Ver. ${ GM_info.script.version } 更新日志`, `
-1. 增加笔记功能
-2. better hook!
+1. 右上角控制面板位置当鼠标悬停时强调效果<br>
+2. 右上角控制面板位置当鼠标悬停时指针变为小手
 `)
 
 const uindow = unsafeWindow
@@ -274,7 +274,10 @@ mod.reg("dash", "控制面板", "@/*", () => { // yjp flaged.
     background-color: cornflowerblue;
     color: white;
     border-radius: 6px;
+}
+#exlg-dash:hover {
     box-shadow: 0 0 7px dodgerblue;
+    cursor:pointer;
 }
 #exlg-dash-window {
     position: absolute;
@@ -1955,7 +1958,7 @@ mod.reg("notepad", "洛谷笔记", "@/*", () => {
     }
 
     async function inject() {
-        if (!/\/problem\/(U|T|P|CF|AT|SP|UVA)\d+[A-Z]*$/.test(location.pathname)) {
+        if (!/\/problem\/(U|T|P|CF|AT|SP|UVA)\d+[A-Z]\d*$/.test(location.pathname)) {
             return
         }
         const db = await openDB(DBName, DBVer)
