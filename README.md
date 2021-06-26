@@ -1,3 +1,7 @@
+# WARNING
+ this repo is unstable, maybe won't work anymore.
+ plz visit [me](https://github.com/optimize-2/extend-luogu)
+
 # extend-luogu
 
 Make [Luogu](https://www.luogu.com.cn/) more powerful.
