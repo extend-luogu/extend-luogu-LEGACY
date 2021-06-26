@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           extend-luogu
 // @namespace      http://tampermonkey.net/
-// @version        6.1.2
+// @version        6.1.3
 // @description    Make Luogu more powerful.
 // @author         optimize_2 ForkKILLET minstdfx haraki swift-zym qinyihao oimaster Maxmilite
 // @match          https://*.luogu.com.cn/*
@@ -37,8 +37,8 @@ const html_circleswitch_on = `<svg data-v-2dc28d52="" aria-hidden="true" focusab
 const html_circleswitch_off = `<svg data-v-2dc28d52="" aria-hidden="true" focusable="false" data-prefix="far" data-icon="circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="fa-input svg-inline--fa fa-circle fa-w-16"><path data-v-2dc28d52="" fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 448c-110.5 0-200-89.5-200-200S145.5 56 256 56s200 89.5 200 200-89.5 200-200 200z" class=""></path></svg>`
 
 const show_exlg_updlog = () => uindow.show_alert(`extend-luogu Ver. ${ GM_info.script.version } 更新日志`, `
-1. 右上角控制面板位置当鼠标悬停时强调效果<br>
-2. 右上角控制面板位置当鼠标悬停时指针变为小手
+1. 洛谷笔记增加重点功能, 增加显示标题功能<br>
+2. 洛谷笔记修复笔记不出现
 `)
 
 const uindow = unsafeWindow
@@ -1875,10 +1875,9 @@ mod.reg("dbc-jump", "双击题号跳题", "@/*", () => {
     }
     document.ondblclick = jump
 })
-
 mod.reg("notepad", "洛谷笔记", "@/*", () => {
     const DBName = "Luogu Notepad",
-        DBVer = 2
+        DBVer = 2;
 
     // save config
     const saveConfig = (config) => {
@@ -1889,135 +1888,138 @@ mod.reg("notepad", "洛谷笔记", "@/*", () => {
                 request.setRequestHeader(
                     "x-csrf-token",
                     $("meta[name='csrf-token']")[0].content
-                )
+                );
             },
             contentType: "application/json;charset=UTF-8",
             data: JSON.stringify({
                 public: false,
                 data: "#lgnote" + JSON.stringify(config),
             }),
-        })
-    }
+        });
+    };
 
     // load config
     const loadConfig = () => {
         return new Promise((resolve, reject) => {
             $.get("https://www.luogu.com.cn/paste?_contentOnly").then((u) => {
-                u = u.currentData.pastes.result
-                let nc = null
+                u = u.currentData.pastes.result;
+                let nc = null;
                 for (const i in u) {
                     try {
-                        if (u[i].data.substr(0, 7) !== "#lgnote") continue
-                        const k = u[i].data
-                        nc = JSON.parse(k.substr(7, k.lentgh))
-                        break
+                        if (u[i].data.substr(0, 7) !== "#lgnote") continue;
+                        const k = u[i].data;
+                        nc = JSON.parse(k.substr(7, k.lentgh));
+                        break;
                     }
-                    catch (e) {}
+                    catch (e) { }
                 }
-                resolve(nc)
-            })
-        })
-    }
+                resolve(nc);
+            });
+        });
+    };
 
     function openDB(name, ver) {
         return new Promise((resolve, reject) => {
-            const req = window.indexedDB.open(name, ver)
+            const req = window.indexedDB.open(name, ver);
             req.onsuccess = (event) => {
-                resolve(event.target.result)
-            }
+                resolve(event.target.result);
+            };
             req.onerror = (event) => {
-                console.error("Open IndexedDB Error!")
+                console.error("Open IndexedDB Error!");
                 window.alert(
                     "洛谷Notepad出错, 请到控制台-应用程序-IndexedDB里删除数据库`Luogu Notepad`后重试, 并在第一次重试时不要立即关闭标签页"
-                )
-            }
+                );
+            };
             req.onupgradeneeded = (event) => {
-                const db = event.target.result
+                const db = event.target.result;
                 if (!db.objectStoreNames.contains("notes")) {
-                    const notes = db.createObjectStore("notes", { keyPath: "pid" })
-                    notes.createIndex("tag", "tag", { unique: false, multiEntry: true })
+                    const notes = db.createObjectStore("notes", { keyPath: "pid" });
+                    notes.createIndex("tag", "tag", { unique: false, multiEntry: true });
                 }
                 if (!db.objectStoreNames.contains("pnotes")) {
-                    db.createObjectStore("pnotes", { keyPath: "tag" })
+                    db.createObjectStore("pnotes", { keyPath: "tag" });
                 }
-            }
-        })
+            };
+        });
     }
 
     function getTagLink(u) {
-        if (!u.tag) return ""
-        let tagp = ""
+        if (!u.tag) return "";
+        let tagp = "";
         for (const t of u.tag)
-            tagp += `<a href="/?notepad&tag=${t}">${t}</a>&nbsp;&nbsp;`
-        return tagp
+            tagp += `<a href="/?notepad&tag=${t}">${t}</a>&nbsp;&nbsp;`;
+        return tagp;
     }
 
     function render(u) {
-        if (u) return markdown.render(u)
-        return ""
+        if (u) return markdown.render(u);
+        return "";
     }
 
     async function inject() {
-        if (!/\/problem\/(U|T|P|CF|AT|SP|UVA)\d+[A-Z]\d*$/.test(location.pathname)) {
-            return
+        if (!/\/problem\/(U|T|P|CF|AT|SP|UVA)\d+[A-Z]*$/.test(location.pathname)) {
+            return;
         }
-        const db = await openDB(DBName, DBVer)
+        const db = await openDB(DBName, DBVer);
 
-        let code
+        let code;
 
-        const [pid] = window.location.pathname.split("/").slice(-1)
+        const [pid] = window.location.pathname.split("/").slice(-1);
 
         $("section.main>section>div>div").prepend(
             `   <details id="notepad-detail" open>
-                <summary id="notepad-summary">笔记</summary>
-                <div style="height:400px" id="notepad-container">
-                    <div id="notepad-editor"></div>
-                </div>
-                <br />
-                <div style="display:flex;justify-content:space-between;">
-                    <div>
-                        <label id="notepad-tag-label">标签</label>
-                        <input data-v-a7f7c968="" type="text" class="lfe-form-sz-middle" style="width: 60%; display: none;" id="notepad-tag">
-                        <label id="notepad-tag-content"></label>
-                    </div>
-                    <div>
-                        <a id="notepad-opencode" href="javascript: void(0)"><svg data-v-29a65e17="" data-v-303bbf52="" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="edit" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="svg-inline--fa fa-edit fa-w-18"><path data-v-29a65e17="" data-v-303bbf52="" fill="currentColor" d="M402.6 83.2l90.2 90.2c3.8 3.8 3.8 10 0 13.8L274.4 405.6l-92.8 10.3c-12.4 1.4-22.9-9.1-21.5-21.5l10.3-92.8L388.8 83.2c3.8-3.8 10-3.8 13.8 0zm162-22.9l-48.8-48.8c-15.2-15.2-39.9-15.2-55.2 0l-35.4 35.4c-3.8 3.8-3.8 10 0 13.8l90.2 90.2c3.8 3.8 10 3.8 13.8 0l35.4-35.4c15.2-15.3 15.2-40 0-55.2zM384 346.2V448H64V128h229.8c3.2 0 6.2-1.3 8.5-3.5l40-40c7.6-7.6 2.2-20.5-8.5-20.5H48C21.5 64 0 85.5 0 112v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V306.2c0-10.7-12.9-16-20.5-8.5l-40 40c-2.2 2.3-3.5 5.3-3.5 8.5z" class=""></path></svg></a>
-                        <text id="notepad-code">代码</text>
-                    </div>
-                </div>
-            </details>
-            <style>.mp-editor-zone-full{width:100%!important;}</style>`
-        )
+				<summary id="notepad-summary">笔记</summary>
+				<div style="height:400px" id="notepad-container">
+					<div id="notepad-editor"></div>
+				</div>
+				<br />
+				<div style="display:flex;justify-content:space-between;">
+					<div>
+						<label>重点&nbsp;</label>
+                        <input type="checkbox" id="notepad-important" />
+						<label id="notepad-tag-label">标签</label>
+						<input data-v-a7f7c968="" type="text" class="lfe-form-sz-middle" style="width: 60%; display: none;" id="notepad-tag">
+						<label id="notepad-tag-content"></label>
+					</div>
+					<div>
+						<a id="notepad-opencode" href="javascript: void(0)"><svg data-v-29a65e17="" data-v-303bbf52="" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="edit" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="svg-inline--fa fa-edit fa-w-18"><path data-v-29a65e17="" data-v-303bbf52="" fill="currentColor" d="M402.6 83.2l90.2 90.2c3.8 3.8 3.8 10 0 13.8L274.4 405.6l-92.8 10.3c-12.4 1.4-22.9-9.1-21.5-21.5l10.3-92.8L388.8 83.2c3.8-3.8 10-3.8 13.8 0zm162-22.9l-48.8-48.8c-15.2-15.2-39.9-15.2-55.2 0l-35.4 35.4c-3.8 3.8-3.8 10 0 13.8l90.2 90.2c3.8 3.8 10 3.8 13.8 0l35.4-35.4c15.2-15.3 15.2-40 0-55.2zM384 346.2V448H64V128h229.8c3.2 0 6.2-1.3 8.5-3.5l40-40c7.6-7.6 2.2-20.5-8.5-20.5H48C21.5 64 0 85.5 0 112v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V306.2c0-10.7-12.9-16-20.5-8.5l-40 40c-2.2 2.3-3.5 5.3-3.5 8.5z" class=""></path></svg></a>
+						<span id="notepad-code">代码</span>
+					</div>
+				</div>
+			</details>
+			<style>.mp-editor-zone-full{width:100%!important;}</style>`
+        );
 
         $("#notepad-opencode").click((event) => {
             window.open(
                 `/record/list?pid=${pid}&user=${uindow._feInstance.currentUser.uid}&scode`
-            )
-        })
+            );
+        });
 
-        const editor = new MarkdownPalettes("#notepad-editor")
-        $("#notepad-detail").removeAttr("open")
+        const editor = new MarkdownPalettes("#notepad-editor");
+        $("#notepad-detail").removeAttr("open");
 
-        const req = db.transaction("notes", "readonly").objectStore("notes").get(pid)
+        const req = db.transaction("notes", "readonly").objectStore("notes").get(pid);
         req.onsuccess = (event) => {
             if (req.result) {
-                editor.content = req.result.content
-                const p = $("#notepad-summary").html()
-                $("#notepad-summary").html(`${p}<font color="red">*</font>`)
-                if (req.result.tag) $("#notepad-tag").val(req.result.tag.join(", "))
-                $("#notepad-tag-content").html(getTagLink(req.result))
+                editor.content = req.result.content;
+                $("#notepad-important").prop("checked", req.result.important);
+                const p = $("#notepad-summary").html();
+                $("#notepad-summary").html(`${p}<font color="red">*</font>`);
+                if (req.result.tag) $("#notepad-tag").val(req.result.tag.join(", "));
+                $("#notepad-tag-content").html(getTagLink(req.result));
                 if (req.result.code) {
                     $("#notepad-code").html(
                         `<a href="/record/${req.result.code}" target="_blank">代码</a>`
-                    )
+                    );
                 }
-                code = req.result.code
+                code = req.result.code;
             }
-        }
+        };
 
         function saveNote() {
-            const obj_store = db.transaction("notes", "readwrite").objectStore("notes")
-            let q
+            const obj_store = db.transaction("notes", "readwrite").objectStore("notes");
+            let q;
             if (editor.content || $("#notepad-tag").val())
                 q = obj_store.put({
                     pid,
@@ -2030,28 +2032,29 @@ mod.reg("notepad", "洛谷笔记", "@/*", () => {
                         .filter((u) => u),
                     title: uindow._feInjection.currentData.problem.title,
                     code,
-                })
-            else q = obj_store.delete(pid)
+                    important: $("#notepad-important").prop("checked")
+                });
+            else q = obj_store.delete(pid);
             q.onsuccess = (event) => {
-                uindow._feInstance.$swalToastSuccess("保存成功")
-            }
+                uindow._feInstance.$swalToastSuccess("保存成功");
+            };
         }
 
         $("#notepad-container").keydown(function (event) {
             if ((event.ctrlKey || event.metaKey) && event.which === 83) {
-                saveNote()
-                event.preventDefault()
-                return false
+                saveNote();
+                event.preventDefault();
+                return false;
             }
-        })
+        });
         $("#notepad-tag").keydown(function (event) {
             if (
                 ((event.ctrlKey || event.metaKey) && event.which === 83) ||
-            event.keyCode === 13
+                event.keyCode === 13
             ) {
-                saveNote()
-                $("#notepad-tag").hide()
-                $("#notepad-tag-content").show()
+                saveNote();
+                $("#notepad-tag").hide();
+                $("#notepad-tag-content").show();
                 const u = {
                     tag: $("#notepad-tag")
                         .val()
@@ -2059,40 +2062,40 @@ mod.reg("notepad", "洛谷笔记", "@/*", () => {
                         .split(",")
                         .map((u) => u.trim())
                         .filter((u) => u),
-                }
-                $("#notepad-tag-content").html(getTagLink(u))
-                $("#notepad-tag").val(u.tag.join(", "))
-                event.preventDefault()
-                return false
+                };
+                $("#notepad-tag-content").html(getTagLink(u));
+                $("#notepad-tag").val(u.tag.join(", "));
+                event.preventDefault();
+                return false;
             }
-        })
+        });
         $("#notepad-tag-label").click((event) => {
-            $("#notepad-tag").show()
-            $("#notepad-tag-content").hide()
-        })
+            $("#notepad-tag").show();
+            $("#notepad-tag-content").hide();
+        });
     }
 
     function saveFile(json, name) {
-        saveAs(
+        SaveAs(
             new Blob([JSON.stringify(json)], {
                 type: "application/json;charset=utf-8",
             }),
             `LuoguNotepad-dump-${name}.json`
-        )
+        );
     }
 
     async function panel() {
         $("#app-old").html(`
-    <div class="lg-index-content am-center">
-        <div class="am-g">
-            <div class="am-u-md-12">
-                <div class="lg-article" id="notepad-content">
-                </div>
-            </div>
-        </div>
-    </div>`)
+	<div class="lg-index-content am-center">
+		<div class="am-g">
+			<div class="am-u-md-12">
+				<div class="lg-article" id="notepad-content">
+				</div>
+			</div>
+		</div>
+	</div>`);
 
-        const db = await openDB(DBName, DBVer)
+        const db = await openDB(DBName, DBVer);
 
         function queryTag(tag) {
             return new Promise((resolve, reject) => {
@@ -2100,210 +2103,231 @@ mod.reg("notepad", "洛谷笔记", "@/*", () => {
                     .transaction("notes", "readonly")
                     .objectStore("notes")
                     .index("tag")
-                    .getAll(tag)
+                    .getAll(tag);
                 req.onsuccess = (event) => {
-                    resolve(req.result)
-                }
-            })
+                    resolve(req.result);
+                };
+            });
         }
         function queryAll(cond = null) {
             return new Promise((resolve, reject) => {
                 const req = db
                     .transaction("notes", "readonly")
                     .objectStore("notes")
-                    .getAll(cond)
+                    .getAll(cond);
                 req.onsuccess = (event) => {
-                    resolve(req.result)
-                }
-            })
+                    resolve(req.result);
+                };
+            });
         }
         function queryPNote(tag) {
             return new Promise((resolve, reject) => {
                 const req = db
                     .transaction("pnotes", "readonly")
                     .objectStore("pnotes")
-                    .get(tag)
+                    .get(tag);
                 req.onsuccess = (event) => {
-                    resolve(req.result)
-                }
-            })
+                    resolve(req.result);
+                };
+            });
         }
         function queryAllPNote(cond = null) {
             return new Promise((resolve, reject) => {
                 const req = db
                     .transaction("pnotes", "readonly")
                     .objectStore("pnotes")
-                    .getAll(cond)
+                    .getAll(cond);
                 req.onsuccess = (event) => {
-                    resolve(req.result)
-                }
-            })
+                    resolve(req.result);
+                };
+            });
         }
 
-        const url = new URL(window.location.href)
-        if (!url.searchParams.has("notepad")) return
+        const url = new URL(window.location.href);
+        if (!url.searchParams.has("notepad")) return;
         function renderProblem(u) {
-            let pcode = ""
-            if (u.code) pcode = `<a href="/record/${u.code}">代码</a>`
+            let pcode = "";
+            if (u.code) pcode = `<a href="/record/${u.code}">代码</a>`;
             return `
-            <div style="display:flex;justify-content:flex-start;flex-direction:row;">
-                <p><a href="/problem/${u.pid}">${u.pid} - ${u.title}</a></p>&nbsp;&nbsp;&nbsp;
-                <details id="notepad-detail-${u.pid}"><summary>笔记</summary>
-                    ${render(u.content)}<hr />
-                    <div style="display:flex;justify-content:space-between;">
-                        <p>标签: ${getTagLink(u)}</p>
-                        ${pcode}
-                    </div>
-                </details>
-            </div>
-            `
+			<div style="display:flex;justify-content:flex-start;flex-direction:row;">
+				<p><a href="/problem/${u.pid}">${u.pid} - ${u.title}<font color="red">${u.important ? "*" : ""}</font></a></p>&nbsp;&nbsp;&nbsp;
+				<details id="notepad-detail-${u.pid}"><summary>笔记</summary>
+					${render(u.content)}<hr />
+					<div style="display:flex;justify-content:space-between;">
+						<p>标签: ${getTagLink(u)}</p>
+						${pcode}
+					</div>
+				</details>
+			</div>
+			`;
         }
         function renderPnote(u) {
             return `
-            <div style="display:flex;justify-content:flex-start;flex-direction:row;">
-                <p><a href="/?notepad&tag=${u.tag}">${u.tag}</a></p>&nbsp;&nbsp;&nbsp;
-                <details><summary>笔记</summary>
-                    ${render(u.content)}<hr />
-                </details>
-            </div>
-            `
+			<div style="display:flex;justify-content:flex-start;flex-direction:row;">
+				<p><a href="/?notepad&tag=${u.tag}">${u.tag}</a></p>&nbsp;&nbsp;&nbsp;
+				<details><summary>笔记</summary>
+					${render(u.content)}<hr />
+				</details>
+			</div>
+			`;
         }
         if (url.searchParams.has("edit")) {
-            const tag = url.searchParams.get("tag").trim()
+            const tag = url.searchParams.get("tag").trim();
+
+            $("head > title").text(`编辑"${tag}"内容 | 洛谷笔记`);
+
             $("#notepad-content").html(
                 `<div style="height:700px;width:100%" id="notepad-container"><div id="notepad-editor"></div></div><style>.mp-editor-zone-full{width:100%!important;}</style>`
-            )
-            const editor = new MarkdownPalettes("#notepad-editor")
-            const pres = await queryPNote(tag)
-            if (pres) editor.content = pres.content
+            );
+            const editor = new MarkdownPalettes("#notepad-editor");
+            const pres = await queryPNote(tag);
+            if (pres) editor.content = pres.content;
             function saveNote() {
                 const obj_store = db
                     .transaction("pnotes", "readwrite")
-                    .objectStore("pnotes")
-                let q
+                    .objectStore("pnotes");
+                let q;
                 if (editor.content)
                     q = obj_store.put({
                         tag,
                         content: editor.content,
-                    })
-                else q = obj_store.delete(tag)
+                    });
+                else q = obj_store.delete(tag);
                 q.onsuccess = (event) => {
-                    uindow._feInstance.$swalToastSuccess("保存成功")
-                }
+                    uindow._feInstance.$swalToastSuccess("保存成功");
+                };
             }
             $("#notepad-container").keydown(function (event) {
                 if ((event.ctrlKey || event.metaKey) && event.which === 83) {
-                    saveNote()
-                    event.preventDefault()
-                    return false
+                    saveNote();
+                    event.preventDefault();
+                    return false;
                 }
-            })
+            });
         }
         else if (url.searchParams.has("tag")) {
-            const tag = url.searchParams.get("tag").trim()
-            const res = await queryTag(tag)
+            const tag = url.searchParams.get("tag").trim();
+            const res = await queryTag(tag);
+
+            $("head > title").text(`标签"${tag}" | 洛谷笔记`);
 
             if (tag === "无") {
                 // res = await query
                 // todo
             }
 
-            let p = `${tag}&nbsp;&nbsp;<a href="/?notepad&tag=${tag}&edit" target="_blank"><svg data-v-29a65e17="" data-v-303bbf52="" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="edit" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="svg-inline--fa fa-edit fa-w-18"><path data-v-29a65e17="" data-v-303bbf52="" fill="currentColor" d="M402.6 83.2l90.2 90.2c3.8 3.8 3.8 10 0 13.8L274.4 405.6l-92.8 10.3c-12.4 1.4-22.9-9.1-21.5-21.5l10.3-92.8L388.8 83.2c3.8-3.8 10-3.8 13.8 0zm162-22.9l-48.8-48.8c-15.2-15.2-39.9-15.2-55.2 0l-35.4 35.4c-3.8 3.8-3.8 10 0 13.8l90.2 90.2c3.8 3.8 10 3.8 13.8 0l35.4-35.4c15.2-15.3 15.2-40 0-55.2zM384 346.2V448H64V128h229.8c3.2 0 6.2-1.3 8.5-3.5l40-40c7.6-7.6 2.2-20.5-8.5-20.5H48C21.5 64 0 85.5 0 112v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V306.2c0-10.7-12.9-16-20.5-8.5l-40 40c-2.2 2.3-3.5 5.3-3.5 8.5z" class=""></path></svg></a><hr/>`
+            let p = `${tag}&nbsp;&nbsp;<a href="/?notepad&tag=${tag}&edit" target="_blank"><svg data-v-29a65e17="" data-v-303bbf52="" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="edit" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="svg-inline--fa fa-edit fa-w-18"><path data-v-29a65e17="" data-v-303bbf52="" fill="currentColor" d="M402.6 83.2l90.2 90.2c3.8 3.8 3.8 10 0 13.8L274.4 405.6l-92.8 10.3c-12.4 1.4-22.9-9.1-21.5-21.5l10.3-92.8L388.8 83.2c3.8-3.8 10-3.8 13.8 0zm162-22.9l-48.8-48.8c-15.2-15.2-39.9-15.2-55.2 0l-35.4 35.4c-3.8 3.8-3.8 10 0 13.8l90.2 90.2c3.8 3.8 10 3.8 13.8 0l35.4-35.4c15.2-15.3 15.2-40 0-55.2zM384 346.2V448H64V128h229.8c3.2 0 6.2-1.3 8.5-3.5l40-40c7.6-7.6 2.2-20.5-8.5-20.5H48C21.5 64 0 85.5 0 112v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V306.2c0-10.7-12.9-16-20.5-8.5l-40 40c-2.2 2.3-3.5 5.3-3.5 8.5z" class=""></path></svg></a><hr/>`;
 
-            const pres = await queryPNote(tag)
-            if (pres) p += `<div>${render(pres.content)}</div><hr/>`
+            const pres = await queryPNote(tag);
 
-            for (const u of res) p += renderProblem(u)
+            if (pres) p += `<div>${render(pres.content)}</div><hr/>`;
 
-            $("#notepad-content").html(p)
+            res.sort((u, v) => {
+                if ((u.important && v.important) || (!u.important && !v.important)) return u.pid < v.pid ? -1 : 1;
+                return u.important ? -1 : 1;
+            });
+
+            for (const u of res) p += renderProblem(u);
+
+            $("#notepad-content").html(p);
         }
         else {
-            const res = await queryAll()
-            let p = ""
-            const cnt = {}
-            const list = []
+            $("head > title").text("主页 | 洛谷笔记");
+
+            const res = await queryAll();
+            let p = "";
+            const cnt = {};
+            const list = [];
             for (const u of res) {
-                // p += renderProblem(u);
-                if (!u.tag) return
-                if (u.tag.length === 0) u.tag.push("无")
+                if (!u.tag) return;
+                if (u.tag.length === 0) u.tag.push("无");
                 for (const t of u.tag) {
-                    if (!cnt[t]) cnt[t] = 0
-                    ++cnt[t]
+                    if (!cnt[t]) cnt[t] = 0;
+                    ++cnt[t];
                 }
             }
-            for (const i in cnt) list.push([i, cnt[i]])
+            for (const i in cnt) list.push([i, cnt[i]]);
 
-            const pnotes = await queryAllPNote()
-            for (const u of pnotes) p += renderPnote(u)
+            const pnotes = await queryAllPNote();
+            for (const u of pnotes) p += renderPnote(u);
 
-            p += `<div><canvas id="notepad-wordcloud" width="2300px" height="1200px" style="width:100%;height:600px;"></canvas></div>`
+            p += `<hr /><div><canvas id="notepad-wordcloud" width="2300px" height="1200px" style="width:100%;height:600px;"></canvas></div><hr />`;
 
-            p += `<div style="display:flex;"><a href="#" id="notepad-dump">导出</a><input type="file" id="notepad-import"/><a href="#" id="notepad-import-submit">导入</a></div>`
-            p += `<div style="display:flex;"><a href="#" id="notepad-dump-cloud">保存到云剪贴板</a><a href="#" id="notepad-import-cloud">从云剪贴板读取</a></div>`
-            $("#notepad-content").html(p)
+            for (const u of res) {
+                if (u.important)
+                    p += renderProblem(u);
+            }
+
+            p += "<br /><hr /><br />";
+
+            p += `<div style="display:flex;"><a href="#" id="notepad-dump">导出</a><input type="file" id="notepad-import"/><a href="#" id="notepad-import-submit">导入</a></div>`;
+            p += `<div style="display:flex;"><a href="#" id="notepad-dump-cloud">保存到云剪贴板</a><a href="#" id="notepad-import-cloud">从云剪贴板读取</a></div>`;
+
+
+            $("#notepad-content").html(p);
 
             $("#notepad-dump").click(async (event) => {
-                saveFile({ notes: res, pnotes: await queryAllPNote() }, "all")
-            })
+                saveFile({ notes: res, pnotes: await queryAllPNote() }, "all");
+            });
             $("#notepad-import-submit").click((event) => {
-                const files = document.getElementById("notepad-import").files
+                const files = document.getElementById("notepad-import").files;
                 if (files.length) {
-                    const file = files[0]
-                    const reader = new FileReader()
+                    const file = files[0];
+                    const reader = new FileReader();
                     if (/json+/.test(file.type)) {
                         reader.onload = function () {
-                            const o = JSON.parse(this.result)
+                            const o = JSON.parse(this.result);
                             if (o.notes)
                                 for (const u of o.notes)
                                     db.transaction("notes", "readwrite")
                                         .objectStore("notes")
-                                        .put(u)
+                                        .put(u);
                             if (o.pnotes)
                                 for (const u of o.pnotes)
                                     db.transaction("pnotes", "readwrite")
                                         .objectStore("pnotes")
-                                        .put(u)
+                                        .put(u);
                             uindow._feInstance
                                 .$swalToastSuccess("导入成功")
-                                .then(() => location.reload())
-                        }
-                        reader.readAsText(file)
+                                .then(() => location.reload());
+                        };
+                        reader.readAsText(file);
                     }
                 }
-            })
+            });
             $("#notepad-dump-cloud").click(async (event) => {
-                saveConfig({ notes: res, pnotes: await queryAllPNote() })
-                uindow._feInstance.$swalToastSuccess("保存成功")
-            })
+                saveConfig({ notes: res, pnotes: await queryAllPNote() });
+                uindow._feInstance.$swalToastSuccess("保存成功");
+            });
             $("#notepad-import-cloud").click(async (event) => {
-                const o = await loadConfig()
-                if (!o) return uindow._feInstance.$swalToastError("导入失败")
+                const o = await loadConfig();
+                if (!o) return uindow._feInstance.$swalToastError("导入失败");
                 if (o.notes)
                     for (const u of o.notes)
-                        db.transaction("notes", "readwrite").objectStore("notes").put(u)
+                        db.transaction("notes", "readwrite").objectStore("notes").put(u);
                 if (o.pnotes)
                     for (const u of o.pnotes)
-                        db.transaction("pnotes", "readwrite").objectStore("pnotes").put(u)
+                        db.transaction("pnotes", "readwrite").objectStore("pnotes").put(u);
                 uindow._feInstance
                     .$swalToastSuccess("导入成功")
-                    .then(() => location.reload())
-            })
+                    .then(() => location.reload());
+            });
 
             WordCloud(document.getElementById("notepad-wordcloud"), {
                 list,
                 backgroundColor: "#fafafa",
                 gridSize: Math.round((16 * $("canvas").width()) / 1024),
                 weightFactor: function (size) {
-                    return (Math.pow(size, 0.4) * $("canvas").width()) / 25
+                    return (Math.pow(size, 0.4) * $("canvas").width()) / 25;
                 },
                 rotateStep: 2,
                 rotateRatio: 0.2,
                 fontFamily: "Microsoft YaHei",
                 shuffle: true,
                 click: (item) => {
-                    window.open(`/?notepad&tag=${item[0]}`)
+                    window.open(`/?notepad&tag=${item[0]}`);
                 },
-            })
+            });
         }
     }
 
@@ -2312,7 +2336,7 @@ mod.reg("notepad", "洛谷笔记", "@/*", () => {
             `<a data-v-303bbf52="" data-v-cd9b963e="" data-v-1316252e="" href="/?notepad" colorscheme="none" class="color-none" data-v-27b2cd59="" style="color: inherit;"><span data-v-cd9b963e="" data-v-303bbf52="" class="icon"><svg data-v-4b8033a4="" data-v-303bbf52="" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="edit" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="svg-inline--fa fa-edit fa-w-18"><path data-v-4b8033a4="" data-v-303bbf52="" fill="currentColor" d="M402.6 83.2l90.2 90.2c3.8 3.8 3.8 10 0 13.8L274.4 405.6l-92.8 10.3c-12.4 1.4-22.9-9.1-21.5-21.5l10.3-92.8L388.8 83.2c3.8-3.8 10-3.8 13.8 0zm162-22.9l-48.8-48.8c-15.2-15.2-39.9-15.2-55.2 0l-35.4 35.4c-3.8 3.8-3.8 10 0 13.8l90.2 90.2c3.8 3.8 10 3.8 13.8 0l35.4-35.4c15.2-15.3 15.2-40 0-55.2zM384 346.2V448H64V128h229.8c3.2 0 6.2-1.3 8.5-3.5l40-40c7.6-7.6 2.2-20.5-8.5-20.5H48C21.5 64 0 85.5 0 112v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V306.2c0-10.7-12.9-16-20.5-8.5l-40 40c-2.2 2.3-3.5 5.3-3.5 8.5z" class=""></path></svg></span> <span data-v-cd9b963e="" data-v-303bbf52="" class="text">
       Note
     </span></a>`
-        )
+        );
     }
 
     async function select() {
@@ -2321,50 +2345,50 @@ mod.reg("notepad", "洛谷笔记", "@/*", () => {
                 const q = db
                     .transaction("notes", "readwrite")
                     .objectStore("notes")
-                    .get(pid)
+                    .get(pid);
                 q.onsuccess = (event) => {
-                    resolve(q.result)
-                }
-            })
+                    resolve(q.result);
+                };
+            });
         }
 
         // uindow.history.pushState = uindow.history.replaceState = null
 
-        const db = await openDB(DBName, DBVer)
-        const url = new URL(window.location.href)
-        const pid = url.searchParams.get("pid")
+        const db = await openDB(DBName, DBVer);
+        const url = new URL(window.location.href);
+        const pid = url.searchParams.get("pid");
         $("a.status-link").click(async (u) => {
-            u.preventDefault()
-            const [code] = u.currentTarget.href.split("/").slice(-1)
-            const orig = (await queryPid(pid)) || { pid }
+            u.preventDefault();
+            const [code] = u.currentTarget.href.split("/").slice(-1);
+            const orig = (await queryPid(pid)) || { pid };
             const q = db
                 .transaction("notes", "readwrite")
                 .objectStore("notes")
-                .put(Object.assign(orig, { code }))
+                .put(Object.assign(orig, { code }));
             q.onsuccess = (event) => {
-                uindow.close()
-            }
-            return false
-        })
+                uindow.close();
+            };
+            return false;
+        });
     }
     // unsafeWindow.markdown = markdown;
     // unsafeWindow.MarkdownPalettes = MarkdownPalettes;
     // unsafeWindow.WordCloud = WordCloud;
     // unsafeWindow.hljs = hljs;
     (function inj() {
-        const url = new URL(window.location.href)
-        setTimeout(entry, 0)
-        if (url.pathname.includes("problem")) setTimeout(inject, 0)
-        else if (url.searchParams.has("notepad")) setTimeout(panel, 0)
+        const url = new URL(window.location.href);
+        setTimeout(entry, 0);
+        if (url.pathname.includes("problem")) setTimeout(inject, 0);
+        else if (url.searchParams.has("notepad")) setTimeout(panel, 0);
         else if (url.pathname.includes("record") && url.searchParams.has("scode"))
-            setTimeout(select, 0)
+            setTimeout(select, 0);
         // setTimeout(() => {
         //     $("pre").each((u, v) => {
         //         hljs.highlightBlock(v)
         //     })
         // }, 400)
-    })()
-})
+    })();
+});
 
 uindow.console.info = (function () {
     const orig = console.info
