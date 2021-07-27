@@ -1,6 +1,6 @@
 # WARNING
  this repo is unstable, maybe won't work anymore.
- plz visit [me](https://github.com/optimize-2/extend-luogu)
+ plz visit [me](https://github.com/extend-luogu/extend-luogu)
 
 # extend-luogu
 
